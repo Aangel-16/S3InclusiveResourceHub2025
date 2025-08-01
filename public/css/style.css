@@ -1,0 +1,131 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  background-color: #ffffff;
+  color: #333;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: #fff;
+}
+
+.navbar .logo {
+  font-weight: bold;
+  font-size: 24px;
+  color: #d8372b;
+}
+
+.navbar a {
+  margin-left: 25px;
+  text-decoration: none;
+  color: #000;
+  font-weight: 600;
+}
+
+/* Header Section */
+.header-section {
+  background-color: #d8372b;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.header-section img {
+  width: 80px;
+  height: 80px;
+}
+
+/* Main Content */
+.main-content {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.main-content h1 {
+  font-size: 36px;
+  font-weight: 800;
+  margin: 20px 0 10px;
+}
+
+.main-content .tagline {
+  font-size: 18px;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+.get-started {
+  background-color: #d8372b;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 40px;
+}
+
+/* Introduction Section */
+.intro {
+  max-width: 800px;
+  margin: 0 auto 40px auto;
+  text-align: left;
+}
+
+.intro h2 {
+  color: #d8372b;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.intro p {
+  font-size: 16px;
+  color: #333;
+}
+
+/* Features Section */
+.features {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+}
+
+.feature-box {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  padding: 20px;
+  flex: 1 1 250px;
+  max-width: 300px;
+  transition: transform 0.2s ease;
+}
+
+.feature-box:hover {
+  transform: translateY(-5px);
+}
+
+.feature-box h3 {
+  color: #d8372b;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.feature-box p {
+  font-size: 14px;
+  color: #555;
+}
