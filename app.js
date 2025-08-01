@@ -1,3 +1,5 @@
+console.log("Starting application...");
+
 const express = require("express");
 const path = require("path");
 const fileUpload = require("express-fileupload");
@@ -10,6 +12,9 @@ const mongoose = require("mongoose");
 // Import models
 const { admin } = require("./models/adminModel");
 const { user } = require("./models/userModel");
+
+// Import routes - THIS WAS MISSING!
+const adminRoutes = require("./routes/adminRoute");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,8 +35,10 @@ app.use(fileUpload());
 const uploadDir = path.join(__dirname, "public/uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
+// Routes - THIS WAS MISSING!
+app.use("/admin", adminRoutes);
 
-//Redirecting to index page
+// Redirecting to index page
 app.get("/", async (req, res) => {
   try {
       res.render("index");
@@ -40,14 +47,16 @@ app.get("/", async (req, res) => {
   }
 });
 
-
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
-// Start server
+// Start server - ONLY ONE app.listen()!
+console.log("About to start server...");
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Admin Dashboard: http://localhost:${PORT}/admin/dashboard`);
 });
+console.log("Server setup complete");
