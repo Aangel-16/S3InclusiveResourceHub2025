@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Resource</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .sidebar {
+      background: linear-gradient(to bottom, #e32636, #1a1a1a);
+      width: 70px;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .sidebar i {
+      font-size: 22px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .main {
+      background-color: #1c1c1c;
+      color: white;
+      padding: 30px;
+      width: 650px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .main h2 {
+      width: 100%;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .form-left {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    label {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    textarea,
+    select {
+      padding: 10px;
+      background-color: #2a2a2a;
+      border: 1px solid #555;
+      color: white;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    .thumbnail {
+      background: linear-gradient(to right, #f857a6, #ff5858);
+      height: 120px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 28px;
+      margin-top: 10px;
+    }
+
+    .switches, .assets {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .switches label,
+    .assets label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .switches input[type="checkbox"],
+    .assets input[type="checkbox"] {
+      accent-color: #00ccff;
+      transform: scale(1.4);
+    }
+
+    .slider {
+      width: 100%;
+    }
+
+    .btn-add {
+      background-color: #e32636;
+      border: none;
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn-add:hover {
+      background-color: #c9182b;
+    }
+  </style>
+</head>
+<body>
+
+    <!-- Main Content -->
+    <div class="main">
+      <h2>Add Resource</h2>
+
+      <!-- Left Side -->
+      <div class="form-left">
+        <div>
+          <label>Title</label>
+          <input type="text" placeholder="Enter title" />
+        </div>
+
+        <div>
+          <label>Description</label>
+          <input type="text" placeholder="Enter description" />
+        </div>
+
+        <div>
+          <label>Video URL</label>
+          <input type="url" placeholder="https://example.com/video" />
+        </div>
+
+        <div>
+          <label>Category</label>
+          <select>
+            <option>Select category</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Content Type</label>
+          <select>
+            <option>Select content type</option>
+          </select>
+        </div>
+
+        <div class="assets">
+          <label><input type="checkbox" checked /> Audio Narration</label>
+          <label><input type="checkbox" checked /> Visual Description</label>
+        </div>
+      </div>
+
+      <!-- Right Side -->
+      <div class="form-right">
+        <div class="thumbnail">▶</div>
+
+        <div class="switches">
+          <label>Audio Narration <input type="checkbox" checked /></label>
+          <label>Visual Description <input type="checkbox" checked /></label>
+        </div>
+
+        <div>
+          <label>Educator Notes</label>
+          <input type="text" placeholder="Enter notes" />
+        </div>
+
+        <div>
+          <label>Feedback</label>
+          <small style="display:block; margin-bottom: 5px;">How suitable is the game?</small>
+          <input type="range" min="1" max="5" class="slider" />
+        </div>
+
+        <button class="btn-add">Add</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

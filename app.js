@@ -30,6 +30,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
+app.use('/css', express.static(__dirname + '/public/css'));
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, "public/uploads");

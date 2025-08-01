@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Resource</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f8f6f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .sidebar {
+      background: linear-gradient(to bottom, #e32636, #1a1a1a);
+      width: 70px;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .sidebar i {
+      font-size: 22px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .main {
+      background-color: #1c1c1c;
+      padding: 40px 30px;
+      color: white;
+      width: 380px;
+    }
+
+    .main h2 {
+      font-size: 22px;
+      margin-bottom: 25px;
+    }
+
+    .main label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .main input[type="text"],
+    .main textarea,
+    .main select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 18px;
+      background-color: #2b2b2b;
+      border: 1px solid #555;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .main input[type="file"] {
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .upload-btn {
+      width: 100%;
+      background-color: #e32636;
+      border: none;
+      color: white;
+      padding: 12px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .upload-btn:hover {
+      background-color: #c9192b;
+    }
+  </style>
+</head>
+<body>
+
+    <!-- Main Upload Panel -->
+    <div class="main">
+      <h2>Upload Resource</h2>
+      <form>
+        <label for="title">Title</label>
+        <input type="text" id="title" placeholder="Enter title" />
+
+        <label for="description">Description</label>
+        <textarea id="description" rows="2" placeholder="Enter description"></textarea>
+
+        <label for="category">Category</label>
+        <select id="category">
+          <option>Select category</option>
+        </select>
+
+        <label for="content">Content Type</label>
+        <select id="content">
+          <option>Select content type</option>
+        </select>
+
+        <label for="file">Upload File</label>
+        <input type="file" id="file" />
+
+        <button type="submit" class="upload-btn">Upload</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
