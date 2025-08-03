@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Logout - Inclusive Learning Hub</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      display: flex;
+      background: #f8f9fa;
+      margin: 0;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #d32f2f;
+      color: white;
+      height: 100vh;
+      padding: 20px 0;
+      position: fixed;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: bold;
+      padding-left: 20px;
+      margin-bottom: 30px;
+    }
+
+    .nav {
+      list-style: none;
+      padding: 0;
+    }
+
+    .nav li {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .nav li:hover,
+    .nav li.active {
+      background: #b71c1c;
+    }
+
+    .nav li .material-icons {
+      margin-right: 10px;
+    }
+
+    .main {
+      margin-left: 250px;
+      padding: 40px;
+      width: calc(100% - 250px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .logout-container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .logout-container h2 {
+      color: #d32f2f;
+      margin-bottom: 20px;
+    }
+
+    .logout-container p {
+      color: #555;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn.confirm {
+      background-color: #d32f2f;
+      color: white;
+      margin-right: 15px;
+    }
+
+    .btn.confirm:hover {
+      background-color: #b71c1c;
+    }
+
+    .btn.cancel {
+      background-color: #e0e0e0;
+      color: #333;
+    }
+
+    .btn.cancel:hover {
+      background-color: #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="logo">Inclusive Learning Hub</div>
+    <ul class="nav">
+      <li><span class="material-icons">dashboard</span> Dashboard</li>
+      <li><span class="material-icons">library_books</span> My Resources</li>
+      <li><span class="material-icons">explore</span> Explore</li>
+      <li><span class="material-icons">hub</span> Community</li>
+      <li><span class="material-icons">account_circle</span> Profile</li>
+      <li class="active"><span class="material-icons">logout</span> Logout</li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="logout-container">
+      <h2>Are you sure 'ABC' wants to Logout?</h2>
+      <p>You are about to log out from your Inclusive Learning Hub account.</p>
+      <button class="btn confirm" onclick="confirmLogout()">Yes, Logout</button>
+      <button class="btn cancel" onclick="cancelLogout()">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    function confirmLogout() {
+      alert("You have been logged out.");
+      window.location.href = "login.html"; // replace with actual login route
+    }
+
+    function cancelLogout() {
+      window.location.href = "dashboard.html"; // redirect to dashboard or previous page
+    }
+  </script>
+
+</body>
+</html>
