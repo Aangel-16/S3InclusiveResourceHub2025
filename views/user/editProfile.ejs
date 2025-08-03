@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Profile - Inclusive Learning Hub</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      display: flex;
+      background: #f3f4f6;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #d32f2f;
+      color: white;
+      height: 100vh;
+      padding: 20px 0;
+      position: fixed;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: bold;
+      padding-left: 20px;
+      margin-bottom: 30px;
+    }
+
+    .nav {
+      list-style: none;
+    }
+
+    .nav li {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .nav li:hover,
+    .nav li.active {
+      background: #b71c1c;
+    }
+
+    .nav li .material-icons {
+      margin-right: 10px;
+    }
+
+    .main {
+      margin-left: 250px;
+      padding: 40px;
+      width: calc(100% - 250px);
+    }
+
+    h1 {
+      color: #d32f2f;
+      margin-bottom: 30px;
+    }
+
+    .form-container {
+      background: white;
+      padding: 40px;
+      max-width: 700px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 14px 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+
+    .form-group label {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      background: white;
+      padding: 0 5px;
+      color: #888;
+      pointer-events: none;
+      transition: 0.3s;
+    }
+
+    .form-group input:focus + label,
+    .form-group input:not(:placeholder-shown) + label,
+    .form-group select:focus + label,
+    .form-group select:not([value=""]) + label {
+      top: -10px;
+      left: 10px;
+      font-size: 0.8rem;
+      color: #d32f2f;
+    }
+
+    .btn-save {
+      background: #d32f2f;
+      color: white;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-save:hover {
+      background: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="logo">Inclusive Learning Hub</div>
+    <ul class="nav">
+      <li><span class="material-icons">dashboard</span> Dashboard</li>
+      <li><span class="material-icons">library_books</span> My Resources</li>
+      <li><span class="material-icons">explore</span> Explore</li>
+      <li><span class="material-icons">hub</span> Community</li>
+      <li><span class="material-icons">favorite</span> Favorites</li>
+      <li><span class="material-icons">account_circle</span> Profile</li>
+      <li class="active"><span class="material-icons">edit</span> Edit Profile</li>
+      <li><span class="material-icons">settings</span> Settings</li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <h1>Edit Profile</h1>
+    <div class="form-container">
+      <form>
+        <div class="form-group">
+          <input type="text" id="name" name="name" required placeholder=" " value="abc">
+          <label for="name">Full Name</label>
+        </div>
+
+        <div class="form-group">
+          <input type="email" id="email" name="email" required placeholder=" " value="abc@example.com">
+          <label for="email">Email Address</label>
+        </div>
+
+        <div class="form-group">
+          <select id="role" name="role" required>
+            <option value="" disabled hidden></option>
+            <option value="Educator">Special Educator</option>
+            <option value="Student">Student</option>
+            <option value="Parent">Parent</option>
+            <option value="Teacher" selected>Teacher</option>
+          </select>
+          <label for="role">User Role</label>
+        </div>
+
+        <div class="form-group">
+          <input type="number" id="completed" name="completed" required placeholder=" " value="42">
+          <label for="completed">Completed Activities</label>
+        </div>
+
+        <div class="form-group">
+          <select id="preference" name="preference" required>
+            <option value="" disabled selected hidden></option>
+            <option value="Visual" selected>Visual & Scenario-based Tools</option>
+            <option value="Audio">Audio Aids</option>
+            <option value="Text">Text-based Lessons</option>
+          </select>
+          <label for="preference">Preferred Learning Mode</label>
+        </div>
+
+        <button type="submit" class="btn-save">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
