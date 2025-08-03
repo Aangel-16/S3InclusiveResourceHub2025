@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Community Forum - Inclusive Learning Hub</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      background: #f4f6f8;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #d32f2f;
+      color: white;
+      height: 100vh;
+      padding-top: 20px;
+      position: fixed;
+    }
+
+    .sidebar .logo {
+      font-size: 1.6rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .sidebar li {
+      padding: 15px 25px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .sidebar li:hover,
+    .sidebar li.active {
+      background-color: #b71c1c;
+    }
+
+    .sidebar .material-icons {
+      margin-right: 10px;
+    }
+
+    .main {
+      margin-left: 250px;
+      padding: 40px;
+      width: calc(100% - 250px);
+    }
+
+    .forum-container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .forum-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .forum-header h2 {
+      color: #333;
+    }
+
+    .btn-new {
+      background: #d32f2f;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-new:hover {
+      background: #b71c1c;
+    }
+
+    .post {
+      border-bottom: 1px solid #ddd;
+      padding: 20px 0;
+    }
+
+    .post:last-child {
+      border-bottom: none;
+    }
+
+    .post-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #d32f2f;
+      margin-bottom: 5px;
+    }
+
+    .post-meta {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .post-content {
+      color: #444;
+      line-height: 1.5;
+    }
+
+    .create-post {
+      margin-top: 40px;
+    }
+
+    .create-post textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+      font-size: 1rem;
+    }
+
+    .btn-post {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #d32f2f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-post:hover {
+      background: #b71c1c;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="logo">Inclusive Hub</div>
+    <ul>
+      <li><span class="material-icons">dashboard</span> Dashboard</li>
+      <li><span class="material-icons">library_books</span> My Resources</li>
+      <li><span class="material-icons">explore</span> Explore</li>
+      <li class="active"><span class="material-icons">hub</span> Community</li>
+      <li><span class="material-icons">account_circle</span> Profile</li>
+      <li><span class="material-icons">logout</span> Logout</li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="forum-container">
+      <div class="forum-header">
+        <h2>Community Forum</h2>
+        <button class="btn-new" onclick="document.getElementById('post-section').scrollIntoView();">+ New Post</button>
+      </div>
+
+      <!-- Sample Posts -->
+      <div class="post">
+        <div class="post-title">Any tips for managing focus in class?</div>
+        <div class="post-meta">Posted by <strong>abc</strong> · 2 hours ago</div>
+        <div class="post-content">
+          I have ADHD and struggle with staying focused during lessons. What strategies help you stay on track?
+        </div>
+      </div>
+
+      <div class="post">
+        <div class="post-title">Best visual learning tools?</div>
+        <div class="post-meta">Posted by <strong>learner123</strong> · Yesterday</div>
+        <div class="post-content">
+          Can anyone suggest great visual tools for dyslexic students? Looking for free apps or browser tools.
+        </div>
+      </div>
+
+      <!-- Create Post -->
+      <div class="create-post" id="post-section">
+        <h3>Create a New Post</h3>
+        <textarea placeholder="Share your thoughts or ask a question..."></textarea>
+        <button class="btn-post" onclick="postMessage()">Post</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function postMessage() {
+      alert("Your post has been submitted (This is just a UI demo).");
+      // You could extend this to send data to a backend
+    }
+  </script>
+
+</body>
+</html>
