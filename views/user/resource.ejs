@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resource Library - Inclusive Learning Hub</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      display: flex;
+      background: #f4f4f4;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: #c62828;
+      height: 100vh;
+      color: white;
+      position: fixed;
+      padding: 20px 0;
+    }
+
+    .sidebar .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding-left: 20px;
+      margin-bottom: 30px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .sidebar ul li:hover,
+    .sidebar ul li.active {
+      background-color: #b71c1c;
+    }
+
+    .sidebar ul li .material-icons {
+      margin-right: 10px;
+    }
+
+    /* Main Content */
+    .main {
+      margin-left: 250px;
+      padding: 30px;
+      width: calc(100% - 250px);
+    }
+
+    .main h1 {
+      margin-bottom: 20px;
+      color: #c62828;
+    }
+
+    .filters {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .filters select {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .resource-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: 0.3s ease-in-out;
+    }
+
+    .resource-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .resource-card .title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .resource-card .type {
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 15px;
+    }
+
+    .resource-card button {
+      background-color: #c62828;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .resource-card button:hover {
+      background-color: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">Inclusive Hub</div>
+    <ul>
+      <li><span class="material-icons">dashboard</span> Dashboard</li>
+      <li class="active"><span class="material-icons">library_books</span> My Resources</li>
+      <li><span class="material-icons">explore</span> Explore</li>
+      <li><span class="material-icons">hub</span> Community</li>
+      <li><span class="material-icons">account_circle</span> Profile</li>
+      <li><span class="material-icons">logout</span> Logout</li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <h1>Resource Library</h1>
+
+    <div class="filters">
+      <select>
+        <option>Filter by Type</option>
+        <option>Video</option>
+        <option>Flashcard</option>
+        <option>Worksheet</option>
+        <option>Story</option>
+      </select>
+
+      <select>
+        <option>Filter by Grade</option>
+        <option>Grade 1</option>
+        <option>Grade 2</option>
+        <option>Grade 3</option>
+      </select>
+
+      <select>
+        <option>Filter by Disability</option>
+        <option>ADHD</option>
+        <option>Dyslexia</option>
+        <option>Autism</option>
+      </select>
+    </div>
+
+    <div class="resource-grid">
+      <div class="resource-card">
+        <div class="title">Counting with Apples</div>
+        <div class="type">Video | Grade 1 | ADHD</div>
+        <button>View Resource</button>
+      </div>
+      <div class="resource-card">
+        <div class="title">Alphabet Flashcards</div>
+        <div class="type">Flashcard | Grade 1 | Dyslexia</div>
+        <button>View Resource</button>
+      </div>
+      <div class="resource-card">
+        <div class="title">Story: The Brave Turtle</div>
+        <div class="type">Story | Grade 2 | Autism</div>
+        <button>View Resource</button>
+      </div>
+      <div class="resource-card">
+        <div class="title">Worksheet</div>
+        <div class="type">Worksheet | Grade 1 | ADHD</div>
+        <button>View Resource</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
