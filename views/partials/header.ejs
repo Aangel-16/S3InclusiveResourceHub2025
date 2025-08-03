@@ -1,10 +1,280 @@
-<!DOCTYPE html>
+<!---<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Inclusive Learning Hub</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/admin.css"> <!-- We'll extract styles here -->
+    <link rel="stylesheet" href="/css/admin.css">  We'll extract styles here 
+</head>
+<body>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inclusion Resource Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%);
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: auto;
+            border-radius: 8px;
+            animation: logoFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        @keyframes logoFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .brand-text {
+            color: white;
+        }
+
+        .brand-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-section {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 25px;
+            transition: none;
+            background: transparent;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .power-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .power-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            border: 2px solid white;
+            border-radius: 50%;
+            border-top: none;
+            transform: translate(-50%, -50%);
+        }
+
+        .power-btn::after {
+            content: '';
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            width: 2px;
+            height: 10px;
+            background: white;
+            transform: translateX(-50%);
+        }
+
+        .power-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        
+
+        .icon:nth-child(1) { --delay: 0s; }
+        .icon:nth-child(2) { --delay: 0.2s; }
+        .icon:nth-child(3) { --delay: 0.4s; }
+        .icon:nth-child(4) { --delay: 0.6s; }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+
+            .brand-title {
+                font-size: 24px;
+            }
+
+            .nav-link {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .nav-menu {
+                gap: 15px;
+            }
+
+            .nav-link {
+                font-size: 13px;
+                padding: 5px 10px;
+            }
+
+           
+            .icon {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        /* Accessibility improvements */
+        .nav-link:focus,
+        .power-btn:focus {
+            outline: 2px solid white;
+            outline-offset: 2px;
+        }
+    </style>
 </head>
 <body>
+    <header class="header">
+        <div class="container">
+            <div class="logo-section">
+                <img src="logo1.png" 
+                     alt="Inclusion Logo" 
+                     class="logo-img">
+                <div class="brand-text">
+                    <h1 class="brand-title">Inclusion Resource Hub</h1>
+                    <p class="brand-subtitle">Empower Connect Include</p>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <nav>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#features" class="nav-link">Features</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#resources" class="nav-link">Resources</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#community" class="nav-link">Community</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#support" class="nav-link">Support</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#login" class="nav-link">Login</a>
+                        </li>
+                    </ul>
+                </nav>
+                <button class="power-btn" aria-label="Power Options" title="Power Options"></button>
+            </div>
+        </div>
+    </header>
+
+</body>
+</html>
