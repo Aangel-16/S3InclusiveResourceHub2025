@@ -2,7 +2,7 @@
 
 const mongoose = require("mongoose");
 
-const MONGO_URL = "";
+const MONGO_URL = "mongodb+srv://angelsmycourses16:angel725@cluster0.51gncrh.mongodb.net/inclusive_resources?retryWrites=true&w=majority&appName=Cluster0";
 
 const connectToDatabase = async () => {
   try {

@@ -5,17 +5,17 @@ const fs = require("fs");
 const mongoose = require("mongoose");
 
 // Load DB config
-//const connectToDatabase = require("./dbConfig");
+const connectToDatabase = require("./dbConfig");
 
 // Import models
-const { admin } = require("./models/adminModel");
-const { user } = require("./models/userModel");
+const { Admin } = require("./models/adminModel");
+const { User } = require("./models/userModel");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
-//connectToDatabase();
+connectToDatabase();
 
 // View Engine
 app.set("view engine", "ejs");
@@ -34,6 +34,7 @@ if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 // Modular Routes
 app.use("/admin", require("./routes/adminRoute"));
 app.use("/user", require("./routes/userRoute"));
+app.use("/auth", require("./routes/authRoute"))
 
 
 

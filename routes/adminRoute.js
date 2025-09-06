@@ -12,7 +12,7 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 //  Admin Dashboard
-router.get("/dashboard", (req, res) => {
+router.get("/adminDashboard", (req, res) => {
   res.render("admin/adminDashboard");
 });
 

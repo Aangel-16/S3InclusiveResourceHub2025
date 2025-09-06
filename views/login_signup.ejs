@@ -1,7 +1,4 @@
-@keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -35,6 +32,11 @@
                 radial-gradient(circle at 80% 20%, rgba(136, 179, 102, 0.2) 0%, transparent 50%),
                 radial-gradient(circle at 40% 40%, rgba(74, 85, 104, 0.2) 0%, transparent 50%);
             animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         @keyframes float {
@@ -371,7 +373,7 @@
         <!-- Left Panel -->
         <div class="left-panel">
             <div class="logo">
-                <img src="logo1.png" alt="Inclusive Learning Hub Logo">
+                <img src="/images/logo1.png" alt="Inclusive Learning Hub Logo">
             </div>
             <h1 class="brand-title">Inclusive Learning Hub</h1>
             <p class="brand-subtitle">Empower. Connect. Include. Join our platform designed for inclusive education and accessible learning experiences.</p>
@@ -387,14 +389,14 @@
                 </div>
 
                 <!-- Login Form -->
-                <form class="form active" id="loginForm">
+                <form class="form active" id="loginForm" action="/auth/login" method="POST">
                     <div class="form-group">
                         <label for="loginEmail">Email Address</label>
-                        <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                        <input type="email" id="loginEmail" name="email" placeholder="Enter your email" required>
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
                     </div>
                     <div class="checkbox-group">
                         <input type="checkbox" id="rememberMe">
@@ -409,35 +411,35 @@
                 </form>
 
                 <!-- Signup Form -->
-                <form class="form" id="signupForm">
+                <form class="form" id="signupForm" action="/user/signUp" method="POST">
                     <div class="form-group">
                         <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" placeholder="Enter your first name" required>
+                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
                     </div>
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" placeholder="Enter your last name" required>
+                        <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
                     </div>
                     <div class="form-group">
                         <label for="signupEmail">Email Address</label>
-                        <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                        <input type="email" id="signupEmail" name="email" placeholder="Enter your email" required>
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" placeholder="Enter your phone number">
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
                     </div>
                     <div class="form-group">
                         <label for="signupPassword">Password</label>
-                        <input type="password" id="signupPassword" placeholder="Create a password" required>
+                        <input type="password" id="signupPassword" name="password" placeholder="Create a password" required>
                     </div>
                     <div class="form-group">
                         <label for="confirmPassword">Confirm Password</label>
-                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
                     </div>
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label for="dateOfBirth">Date of Birth</label>
                         <input type="date" id="dateOfBirth">
-                    </div>
+                    </div>-->
                     <div class="checkbox-group">
                         <input type="checkbox" id="agreeTerms" required>
                         <label for="agreeTerms">I agree to the Terms of Service and Privacy Policy</label>
@@ -455,100 +457,62 @@
     </div>
 
     <script>
-        function toggleForm(formType) {
-            const loginForm = document.getElementById('loginForm');
-            const signupForm = document.getElementById('signupForm');
-            const toggleBtns = document.querySelectorAll('.toggle-btn');
-            const formContainer = document.querySelector('.form-container');
-            
-            // Remove active class from all buttons and forms
-            toggleBtns.forEach(btn => btn.classList.remove('active'));
-            loginForm.classList.remove('active');
-            signupForm.classList.remove('active');
-            
-            // Remove previous container classes
-            formContainer.classList.remove('signup-container', 'login-container');
-            
-            // Add active class to selected button and form
-            if (formType === 'login') {
-                toggleBtns[0].classList.add('active');
-                formContainer.classList.add('login-container');
-                setTimeout(() => loginForm.classList.add('active'), 150);
-            } else {
-                toggleBtns[1].classList.add('active');
-                formContainer.classList.add('signup-container');
-                setTimeout(() => signupForm.classList.add('active'), 150);
-            }
+    function toggleForm(formType) {
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const toggleBtns = document.querySelectorAll('.toggle-btn');
+        const formContainer = document.querySelector('.form-container');
+
+        toggleBtns.forEach(btn => btn.classList.remove('active'));
+        loginForm.classList.remove('active');
+        signupForm.classList.remove('active');
+        formContainer.classList.remove('signup-container', 'login-container');
+
+        if (formType === 'login') {
+            toggleBtns[0].classList.add('active');
+            formContainer.classList.add('login-container');
+            setTimeout(() => loginForm.classList.add('active'), 150);
+        } else {
+            toggleBtns[1].classList.add('active');
+            formContainer.classList.add('signup-container');
+            setTimeout(() => signupForm.classList.add('active'), 150);
         }
+    }
 
-        // Form submission handlers
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+    // Signup form validation
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password !== confirmPassword) {
             e.preventDefault();
-            const submitBtn = this.querySelector('.submit-btn');
-            const btnText = submitBtn.querySelector('.btn-text');
-            
-            // Show loading state
-            btnText.innerHTML = '<div class="loading"></div>';
-            submitBtn.disabled = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                alert('Login successful! (This is a demo)');
-                btnText.textContent = 'Sign In';
-                submitBtn.disabled = false;
-            }, 2000);
+            alert('Passwords do not match!');
+        }
+    });
+
+    // Floating label & validation styles
+    document.querySelectorAll('input, textarea, select').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
         });
 
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.getElementById('signupPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                alert('Passwords do not match!');
-                return;
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
             }
-            
-            const submitBtn = this.querySelector('.submit-btn');
-            const btnText = submitBtn.querySelector('.btn-text');
-            
-            // Show loading state
-            btnText.innerHTML = '<div class="loading"></div>';
-            submitBtn.disabled = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                alert('Account created successfully! (This is a demo)');
-                btnText.textContent = 'Create Account';
-                submitBtn.disabled = false;
-                // Switch to login form
-                toggleForm('login');
-            }, 2000);
         });
+    });
 
-        // Add floating label effect
-        document.querySelectorAll('input, textarea, select').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement.classList.add('focused');
-            });
-            
-            input.addEventListener('blur', function() {
-                if (!this.value) {
-                    this.parentElement.classList.remove('focused');
-                }
-            });
+    document.querySelectorAll('input[required]').forEach(input => {
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.style.borderColor = 'rgba(255, 100, 100, 0.5)';
+            } else {
+                this.style.borderColor = 'rgba(100, 255, 100, 0.5)';
+            }
         });
+    });
+</script>
 
-        // Add form validation feedback
-        document.querySelectorAll('input[required]').forEach(input => {
-            input.addEventListener('blur', function() {
-                if (!this.value) {
-                    this.style.borderColor = 'rgba(255, 100, 100, 0.5)';
-                } else {
-                    this.style.borderColor = 'rgba(100, 255, 100, 0.5)';
-                }
-            });
-        });
-    </script>
 </body>
 </html>
