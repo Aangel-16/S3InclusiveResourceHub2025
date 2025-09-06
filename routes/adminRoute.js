@@ -1,31 +1,20 @@
-console.log("📁 adminRoute.js file loading...");
-
+//adminRoute
 const express = require("express");
-const path = require("path");
 const router = express.Router();
+const path = require("path");
+const fs = require("fs");
+const bcrypt = require("bcrypt");
 
-console.log("✅ adminRoute.js loaded successfully!");
 
-// Simple test route
+const uploadDir = path.join(__dirname, "../public/uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+//  Admin Dashboard
 router.get("/dashboard", (req, res) => {
-  console.log("🎯 Dashboard route accessed!");
-  res.send(`
-    <html>
-      <head><title>Admin Dashboard Test</title></head>
-      <body>
-        <h1>🎉 Success! Admin Dashboard Route Works!</h1>
-        <p>Your routing is working correctly.</p>
-        <p>File location: routes/adminRoute.js</p>
-        <p>Route: /admin/dashboard</p>
-      </body>
-    </html>
-  `);
+  res.render("admin/adminDashboard");
 });
 
-router.get("/", (req, res) => {
-  console.log("🏠 Admin root route accessed, redirecting...");
-  res.redirect("/admin/dashboard");
-});
-
-console.log("📤 Exporting admin router...");
-module.exports = router;
+//Export the router
+module.exports = router;  
