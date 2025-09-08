@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Puzzle Game</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            padding: 30px;
+        }
+
+        .game-title {
+            color: #4a5568;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .puzzle-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #007bff;
+        }
+
+        .draggable-item {
+            padding: 15px;
+            margin: 8px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .draggable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            border-color: #007bff;
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .drop-zone {
+            min-height: 80px;
+            padding: 20px;
+            margin: 8px;
+            border: 3px dashed #adb5bd;
+            border-radius: 12px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #6c757d;
+        }
+
+        .drop-zone.drag-over {
+            border-color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+            transform: scale(1.02);
+        }
+
+        .drop-zone.correct {
+            background: linear-gradient(145deg, #d4edda, #c3e6cb);
+            border-color: #28a745;
+            color: #155724;
+            animation: success-pulse 0.6s ease;
+        }
+
+        .drop-zone.incorrect {
+            background: linear-gradient(145deg, #f8d7da, #f1b2b5);
+            border-color: #dc3545;
+            color: #721c24;
+            animation: error-shake 0.6s ease;
+        }
+
+        @keyframes success-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes error-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .picture-item {
+            font-size: 3rem;
+            line-height: 1;
+        }
+
+        .number-item {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .word-zone {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .score-board {
+            background: linear-gradient(145deg, #28a745, #20c997);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .reset-btn {
+            background: linear-gradient(145deg, #6f42c1, #5a2d91);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(111, 66, 193, 0.4);
+            background: linear-gradient(145deg, #5a2d91, #6f42c1);
+        }
+
+        .completion-message {
+            display: none;
+            background: linear-gradient(145deg, #ffd700, #ffed4a);
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
+            animation: celebration 0.8s ease;
+        }
+
+        @keyframes celebration {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="game-title">🧩 Matching Puzzle Game</h1>
+        
+        <div class="score-board">
+            <h4 class="mb-0">Score: <span id="score">0</span>/6 | Attempts: <span id="attempts">0</span></h4>
+        </div>
+
+        <div class="completion-message" id="completionMessage">
+            🎉 Congratulations! You've completed all puzzles! 🎉
+        </div>
+
+        <div class="game-container">
+            <!-- Picture to Word Matching -->
+            <div class="puzzle-section">
+                <h3 class="mb-4">🖼️ Picture to Word Matching</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Pictures</h5>
+                        <div class="draggable-item picture-item" draggable="true" data-type="picture" data-value="cat">🐱</div>
+                        <div class="draggable-item picture-item" draggable="true" data-type="picture" data-value="dog">🐶</div>
+                        <div class="draggable-item picture-item" draggable="true" data-type="picture" data-value="bird">🐦</div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Words</h5>
+                        <div class="drop-zone word-zone" data-answer="cat">Drop CAT here</div>
+                        <div class="drop-zone word-zone" data-answer="dog">Drop DOG here</div>
+                        <div class="drop-zone word-zone" data-answer="bird">Drop BIRD here</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Number to Word Matching -->
+            <div class="puzzle-section">
+                <h3 class="mb-4">🔢 Number to Word Matching</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Numbers</h5>
+                        <div class="draggable-item number-item" draggable="true" data-type="number" data-value="one">1</div>
+                        <div class="draggable-item number-item" draggable="true" data-type="number" data-value="two">2</div>
+                        <div class="draggable-item number-item" draggable="true" data-type="number" data-value="three">3</div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Words</h5>
+                        <div class="drop-zone word-zone" data-answer="one">Drop ONE here</div>
+                        <div class="drop-zone word-zone" data-answer="two">Drop TWO here</div>
+                        <div class="drop-zone word-zone" data-answer="three">Drop THREE here</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="reset-btn" onclick="resetGame()">🔄 Reset Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let score = 0;
+        let attempts = 0;
+        let draggedElement = null;
+
+        // Initialize drag and drop functionality
+        function initializeDragDrop() {
+            const draggableItems = document.querySelectorAll('.draggable-item');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            draggableItems.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('dragenter', handleDragEnter);
+                zone.addEventListener('dragleave', handleDragLeave);
+                zone.addEventListener('drop', handleDrop);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            e.target.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.target.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.target.classList.remove('drag-over');
+            
+            if (!draggedElement) return;
+
+            const draggedValue = draggedElement.getAttribute('data-value');
+            const targetAnswer = e.target.getAttribute('data-answer');
+            
+            attempts++;
+            updateScoreBoard();
+
+            if (draggedValue === targetAnswer && !e.target.classList.contains('correct')) {
+                // Correct match
+                e.target.classList.remove('incorrect');
+                e.target.classList.add('correct');
+                e.target.innerHTML = draggedElement.innerHTML + ' ✓';
+                draggedElement.style.display = 'none';
+                
+                score++;
+                updateScoreBoard();
+                
+                // Check if game is complete
+                if (score === 6) {
+                    setTimeout(() => {
+                        document.getElementById('completionMessage').style.display = 'block';
+                    }, 500);
+                }
+            } else if (!e.target.classList.contains('correct')) {
+                // Incorrect match
+                e.target.classList.remove('correct');
+                e.target.classList.add('incorrect');
+                
+                // Reset after animation
+                setTimeout(() => {
+                    e.target.classList.remove('incorrect');
+                }, 600);
+            }
+
+            draggedElement = null;
+        }
+
+        function updateScoreBoard() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('attempts').textContent = attempts;
+        }
+
+        function resetGame() {
+            score = 0;
+            attempts = 0;
+            updateScoreBoard();
+            
+            // Reset all draggable items
+            const draggableItems = document.querySelectorAll('.draggable-item');
+            draggableItems.forEach(item => {
+                item.style.display = 'block';
+            });
+
+            // Reset all drop zones
+            const dropZones = document.querySelectorAll('.drop-zone');
+            dropZones.forEach(zone => {
+                zone.classList.remove('correct', 'incorrect');
+                const answer = zone.getAttribute('data-answer').toUpperCase();
+                zone.innerHTML = `Drop ${answer} here`;
+            });
+
+            // Hide completion message
+            document.getElementById('completionMessage').style.display = 'none';
+        }
+
+        // Initialize the game when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDragDrop();
+            updateScoreBoard();
+        });
+    </script>
+</body>
+</html>
