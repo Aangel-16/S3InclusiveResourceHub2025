@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Logout - Inclusive Learning Hub</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { display: flex; background: #f8f9fa; margin: 0; }
+    .main { margin-left: 250px; padding: 40px; width: calc(100% - 250px); display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .logout-container { background: white; padding: 40px; border-radius: 12px; max-width: 600px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .logout-container h2 { color: #d32f2f; margin-bottom: 20px; }
+    .logout-container p { color: #555; margin-bottom: 30px; font-size: 1.1rem; }
+    .btn { padding: 12px 30px; border: none; font-size: 1rem; border-radius: 8px; cursor: pointer; transition: background 0.3s ease; }
+    .btn.confirm { background-color: #d32f2f; color: white; margin-right: 15px; }
+    .btn.confirm:hover { background-color: #b71c1c; }
+    .btn.cancel { background-color: #e0e0e0; color: #333; }
+    .btn.cancel:hover { background-color: #ccc; }
+  </style>
+</head>
+<body>
+
+<div class="main">
+  <div class="logout-container">
+    <h2>Are you sure <%= user ? "'" + user.name + "'" : "you" %> want to Logout?</h2>
+    <p>You are about to log out from your Inclusive Learning Hub account.</p>
+    <a href="/auth/logout" class="btn confirm">Yes, Logout</a>
+    <button class="btn cancel" id="cancelBtn">Cancel</button>
+  </div>
+</div>
+
+<script>
+  // Determine where to go on cancel based on role
+  const dashboardUrl = "<%= user && user.role === 'admin' ? '/admin/adminDashboard' : '/user/userDashboard' %>";
+
+  document.getElementById('cancelBtn').addEventListener('click', () => {
+    window.location.href = dashboardUrl;
+  });
+</script>
+
+</body>
+</html>

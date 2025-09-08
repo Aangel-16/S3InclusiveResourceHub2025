@@ -4,6 +4,10 @@ const fileUpload = require("express-fileupload");
 const fs = require("fs");
 const mongoose = require("mongoose");
 
+// for session handling
+require("dotenv").config();
+const session = require("express-session");
+
 // Load DB config
 const connectToDatabase = require("./dbConfig");
 
@@ -16,6 +20,7 @@ const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
 connectToDatabase();
+
 
 // View Engine
 app.set("view engine", "ejs");
@@ -31,10 +36,22 @@ app.use('/css', express.static(__dirname + '/public/css'));
 const uploadDir = path.join(__dirname, "public/uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
+//session handling
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1000 * 60 * 60 } // 1 hour
+  })
+);
+
 // Modular Routes
 app.use("/admin", require("./routes/adminRoute"));
 app.use("/user", require("./routes/userRoute"));
-app.use("/auth", require("./routes/authRoute"))
+
+const authRoutes = require("./routes/authRoute");
+app.use("/auth", authRoutes);
 
 
 
@@ -47,20 +64,12 @@ app.get("/", async (req, res) => {
   }
 });
 
-//Rendering login page
-app.get("/login_signup", async (req, res) => {
-  try {
-      res.render("login_signup");
-  } catch (error) {
-    res.status(500).send("Error loading homepage");
-  }
-});
-
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
+
 
 // Start server
 app.listen(PORT, () => {
