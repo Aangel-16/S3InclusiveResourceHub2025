@@ -1,0 +1,57 @@
+<!-- Add User Form (Admin Only) -->
+<div class="form-container">
+  <h2 class="form-title">Add New User</h2>
+
+  <form class="form" id="addUserForm" action="/admin/addUser" method="POST">
+    <!-- First Name -->
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" name="firstName" placeholder="Enter first name" required>
+    </div>
+
+    <!-- Last Name -->
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" name="lastName" placeholder="Enter last name" required>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="userEmail">Email Address</label>
+      <input type="email" id="userEmail" name="email" placeholder="Enter email" required>
+    </div>
+
+    <!-- Phone -->
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="Enter phone number">
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="userPassword">Password</label>
+      <input type="password" id="userPassword" name="password" placeholder="Set a password" required>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+    </div>
+
+    <!-- Role Dropdown -->
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select id="role" name="role" required>
+        <option value="">-- Select Role --</option>
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+      </select>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="submit-btn">
+      <span class="btn-text">Add User</span>
+    </button>
+  </form>
+</div>
