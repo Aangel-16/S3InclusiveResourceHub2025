@@ -1,0 +1,68 @@
+<!-- listEducators.ejs : This page displays the list of all educatorts-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resource Library - Inclusive Learning Hub</title>
+  <link rel="stylesheet" href="/css/adminStyle.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <%- include("../partials/adminSidebar") %>
+<div class="main-content educators-page">
+<div class="main-content">
+   <header>
+       <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="welcome-text">Welcome back, Admin!</div>
+        <div class="user-profile">
+          <div class="profile-pic">A</div>
+          <span>Admin User</span>
+        </div>
+      </div>
+      <h2>Resource Library</h2>
+    </header>
+    
+  <div class="content-section">
+    <h3>Our Educators</h3>
+    <div class="educator-grid">
+      <!-- Educator Card -->
+      <div class="educator-card">
+        <div class="educator-avatar">AH</div>
+        <h4>Allen Haison</h4>
+        <p>Specialist in Early Childhood Education</p>
+        <a href="#" class="btn">View Profile</a>
+      </div>
+
+      <div class="educator-card">
+        <div class="educator-avatar">MS</div>
+        <h4>Mary Smith</h4>
+        <p>Focus on Inclusive Learning Strategies</p>
+        <a href="#" class="btn">View Profile</a>
+      </div>
+
+      <div class="educator-card">
+        <div class="educator-avatar">RK</div>
+        <h4>Rakesh Kumar</h4>
+        <p>Expert in Special Needs Education</p>
+        <a href="#" class="btn">View Profile</a>
+      </div>
+
+      <div class="educator-card">
+        <div class="educator-avatar">LN</div>
+        <h4>Lisa Nguyen</h4>
+        <p>Passionate about Adaptive Learning</p>
+        <a href="#" class="btn">View Profile</a>
+      </div>
+
+      <!-- Add more educator cards here -->
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+</html>
