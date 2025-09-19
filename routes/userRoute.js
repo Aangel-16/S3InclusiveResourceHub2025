@@ -14,10 +14,6 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 
-
-
-
-
 // New user SignUp form
 router.get("/signUp", async (req, res) => {
   try {
@@ -70,12 +66,23 @@ router.post("/signUp", async (req, res) => {
 });
 
 
-
-
-
-
 router.get("/userDashboard", (req, res) => {
   res.render("user/userDashboard");
 });
+
+router.get("/viewResources", (req, res) => {
+  res.render("user/viewResources");
+});
+
+
+router.get("/communityHub", (req, res) => {
+  res.render("user/community");
+});
+
+//user Views Guidelines
+router.get("/viewGuidelines", (req, res) => { //define the route for the corresponding ejs file
+  res.render("user/viewGuidelines"); // Mention the ejs file to be rendered
+});
+
 
 module.exports = router;

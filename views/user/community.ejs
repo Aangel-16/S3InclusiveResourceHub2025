@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Community Forum - Inclusive Learning Hub</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   <link rel="stylesheet" href="/css/userStyle.css">
   <style>
     * {
       margin: 0;
@@ -152,17 +153,8 @@
 </head>
 <body>
 
-  <div class="sidebar">
-    <div class="logo">Inclusive Hub</div>
-    <ul>
-      <li><span class="material-icons">dashboard</span> Dashboard</li>
-      <li><span class="material-icons">library_books</span> My Resources</li>
-      <li><span class="material-icons">explore</span> Explore</li>
-      <li class="active"><span class="material-icons">hub</span> Community</li>
-      <li><span class="material-icons">account_circle</span> Profile</li>
-      <li><span class="material-icons">logout</span> Logout</li>
-    </ul>
-  </div>
+  <!-- Sidebar include -->
+  <%- include("../partials/userSidebar") %>
 
   <div class="main">
     <div class="forum-container">

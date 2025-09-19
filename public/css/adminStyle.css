@@ -142,7 +142,7 @@
 
 /* ================== MAIN CONTENT OF ADMIN SIDE BAR - THE FIRST PAGE AFTER LOGED IN ==================*/
 .main-content {
-  margin-left: 250px; 
+  margin-left: 260px; 
   padding: 20px;
   transition: margin-left 0.3s ease;
 }
@@ -847,4 +847,96 @@
 .categories-page .category-toolbar .actions .add-category:hover {
   opacity: 0.9;
   transform: translateY(-2px);
+}
+
+/* ==================== COMMON FORM STYLES (Admin Module) ==================== */
+.admin-form-container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 25px 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.admin-form-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Form Groups */
+.admin-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-form .form-group label {
+  font-weight: 500;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.admin-form .form-group input,
+.admin-form .form-group select,
+.admin-form .form-group textarea {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.admin-form .form-group input:focus,
+.admin-form .form-group select:focus,
+.admin-form .form-group textarea:focus {
+  border-color: #d73527;
+  box-shadow: 0 0 0 2px rgba(215, 53, 39, 0.15);
+  outline: none;
+}
+
+/* Dropdowns */
+.admin-form .form-group select {
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* Buttons */
+.admin-form .submit-btn,
+.admin-form .btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #d73527, #c02d20);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-form .submit-btn:hover,
+.admin-form .btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .admin-form-container {
+    padding: 20px;
+  }
 }

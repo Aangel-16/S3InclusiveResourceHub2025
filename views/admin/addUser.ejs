@@ -1,10 +1,19 @@
 <!-- AddUser.ejs Form (Admin Only): Admin can add both dmin level and regular users -->
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add User</title>
+  <link rel="stylesheet" href="/css/adminStyle.css">
 
-<div class="form-container">
-  <h2 class="form-title">Add New User</h2>
+</head>
+<body>
+    <div class="admin-form-container">
+  <h2 class="admin-form-title">Add New User</h2>
 
-  <form class="form" id="addUserForm" action="/admin/addUser" method="POST">
+  <form class="admin-form" id="addUserForm" action="/admin/addUser" method="POST">
     <!-- First Name -->
     <div class="form-group">
       <label for="firstName">First Name</label>
@@ -57,3 +66,8 @@
     </button>
   </form>
 </div>
+
+
+</body>
+</html>
+

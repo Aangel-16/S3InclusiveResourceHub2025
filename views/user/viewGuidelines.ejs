@@ -1,51 +1,46 @@
-<!-- resourceLibrary.ejs-->
+<!--   viewGuidelines.ejs -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resource Library - Inclusive Learning Hub</title>
+  <title>Guidelines - Inclusive Learning Hub</title>
   <link rel="stylesheet" href="/css/adminStyle.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
   <!-- Sidebar -->
-  <%- include("../partials/adminSidebar") %>
+  <%- include("../partials/userSidebar") %>
   
   <!-- Main Content -->
   <div class="main-content">
     <header>
        <!-- Top Bar -->
       <div class="top-bar">
-        <div class="welcome-text">Welcome back, Admin!</div>
+        <div class="welcome-text">Welcome back, User!</div>
         <div class="user-profile">
           <div class="profile-pic">A</div>
-          <span>Admin User</span>
+          <span>User</span>
         </div>
       </div>
     </header>
 
     <div class="resource-toolbar">
     <div class="toolbar-header">
-      <h2>Resource Library</h2>
+      <h2>Guidelines</h2>
       </div>
       <div class="search-box">
         <input type="text" placeholder="Search resources...">
       </div>
-      <div class="actions">
-        <a href="#" class="btn">Filter</a>
-        <a href="#" class="btn">+ Add Resource</a>
-      </div>
-    </div>
 
 
     <div class="content-section">
-      <h3>Browse Resources by Category</h3>
+      <h3>Browse Guidelines and financial aids</h3>
 
-      <!-- Flashcards -->
-      <section class="resource-category">
-        <h4>Flashcards</h4>
+      <!-- Guideline resources as grid-->
+      <section class="guidelines">
+        <h4>Guidelines</h4>
         <div class="resource-grid">
 
           <div class="resource-card">
@@ -53,8 +48,7 @@
             <p>Colorful flashcards for A–Z learning.</p>
             <div class="card-actions">
               <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
+              <a href="#" class="btn edit">Download</a>
             </div>
             <p class="updated-info">Updated 5 days ago</p>
           </div>
