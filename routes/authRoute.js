@@ -66,5 +66,11 @@ router.get("/logout", (req, res) => {
   });
 });
 
+router.get("/about", (req, res) => {
+  res.render("aboutus"); 
+});
 
+router.get("/contact", (req, res) => {
+  res.render("contact"); 
+});
 module.exports = router;

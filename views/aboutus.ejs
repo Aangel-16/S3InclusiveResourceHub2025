@@ -1,0 +1,163 @@
+<!-- aboutus.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - InLearn | Inclusive Resource Hub</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="about-page">
+    <!-- Header -->
+    <%- include('partials/mainHeader') %>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <h1>About InLearn</h1>
+            <p>Transforming education through inclusive digital resources and empowering educators to create meaningful learning experiences for all students.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Our Story Section -->
+        <section class="content-section">
+            <h2>Our Story</h2>
+            <p>InLearn was born from a simple yet powerful belief: every student deserves access to quality educational resources, regardless of their abilities or learning differences. Founded by a team of passionate educators, special education specialists, and technology innovators, we recognized the critical gap in accessible, inclusive educational content.</p>
+            <p>What started as a small collection of adapted materials has grown into a comprehensive digital ecosystem serving thousands of educators and millions of students worldwide. Our platform represents years of research, collaboration with educational institutions, and feedback from the very educators and students we serve.</p>
+        </section>
+
+        <!-- Stats Section -->
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">10,000+</div>
+                <div class="stat-label">Learning Resources</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">5,000+</div>
+                <div class="stat-label">Active Educators</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">95%</div>
+                <div class="stat-label">Time Saved</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Disability Types Supported</div>
+            </div>
+        </div>
+
+        <!-- Mission & Vision -->
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-icon"></div>
+                <h3>Our Mission</h3>
+                <p>To democratize inclusive education by providing educators with comprehensive, accessible resources and AI-powered tools that adapt to diverse learning needs. We strive to eliminate barriers and create learning environments where every student can thrive.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"></div>
+                <h3>Our Vision</h3>
+                <p>A world where inclusive education is the standard, not the exception. We envision classrooms where technology seamlessly supports diverse learners, and where educators are empowered with the tools and knowledge to nurture every student's potential.</p>
+            </div>
+        </div>
+
+        <!-- Our Values -->
+        <section class="content-section">
+            <h2>Our Core Values</h2>
+            <div class="values-list">
+                <div class="value-item">
+                    <div class="value-icon"></div>
+                    <div class="value-content">
+                        <h4>Inclusivity First</h4>
+                        <p>Every decision we make prioritizes accessibility and inclusion, ensuring our platform serves learners of all abilities.</p>
+                    </div>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon"></div>
+                    <div class="value-content">
+                        <h4>Innovation</h4>
+                        <p>We leverage cutting-edge AI and educational technology to create solutions that were previously impossible.</p>
+                    </div>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon"></div>
+                    <div class="value-content">
+                        <h4>Community</h4>
+                        <p>We believe in the power of collaborative learning and building connections between educators worldwide.</p>
+                    </div>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon"></div>
+                    <div class="value-content">
+                        <h4>Evidence-Based</h4>
+                        <p>Our resources are grounded in research and validated through real classroom experiences and outcomes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="content-section">
+            <h2>Meet Our Team</h2>
+            <div class="team-grid">
+
+                <div class="team-member">
+                    <div class="member-avatar">AH</div>
+                    <div class="member-name">Allen Haison</div>
+                    <div class="member-role">role</div>
+                    <p class="member-bio"> Passionate about leveraging technology to create inclusive learning environments.</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-avatar">AKS</div>
+                    <div class="member-name">Amruthalakshmi K S/div>
+                    <div class="member-role">role</div>
+                    <p class="member-bio"> UX designer and inclusive digital experiences.</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-avatar">AS</div>
+                    <div class="member-name">Angel Shibu</div>
+                    <div class="member-role">role</div>
+                    <p class="member-bio">specializing in adaptive learning technologies and cognitive accessibility.</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-avatar">SS</div>
+                    <div class="member-name">Sumayya Shafeek </div>
+                    <div class="member-role">role</div>
+                    <p class="member-bio"> personalized learning and content adaptation.</p>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- Impact Section -->
+        <section class="content-section">
+            <h2>Our Impact</h2>
+            <p>Since our launch, InLearn has transformed the way educators approach inclusive education. Our platform has facilitated the creation of over 50,000 customized learning materials, saved educators countless hours of preparation time, and most importantly, has improved learning outcomes for students with diverse needs.</p>
+            <p>We partner with leading educational institutions, non-profit organizations, and accessibility advocates to ensure our platform continues to evolve and meet the changing needs of the inclusive education community.</p>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2>Join Our Mission</h2>
+            <p>Whether you're an educator, administrator, or advocate for inclusive education, we invite you to be part of our growing community.</p>
+            <div class="cta-buttons">
+                <a href="#" class="cta-btn primary">Start Free Trial</a>
+                <a href="#" class="cta-btn">Learn More</a>
+            </div>
+        </section>
+    </main>
+
+    <%- include("partials/footer") %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

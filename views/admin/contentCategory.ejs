@@ -1,0 +1,113 @@
+<!-- views/admin/manageCategories.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Content Categories - Inclusive Learning Hub</title>
+  <link rel="stylesheet" href="/css/adminStyle.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="categories-page">
+
+  <!-- Sidebar -->
+  <%- include("../partials/adminSidebar") %>
+
+   <!-- Main Content -->
+  <div class="main-content">
+    <header>
+       <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="welcome-text">Welcome back, Admin!</div>
+        <div class="user-profile">
+          <div class="profile-pic">A</div>
+          <span>Admin User</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-section">
+      <!-- Page Heading -->
+      <header>
+        <h2>Content Categories</h2>
+      </header>
+
+      <!-- Toolbar -->
+        <div class="category-toolbar">
+            <div class="search-box">
+            <input type="text" placeholder="Search categories...">
+            </div>
+            <div class="actions">
+            <button class="btn add-category">+ Add New Category</button>
+            </div>
+        </div>
+
+      <!-- Categories Grid -->
+      <div class="category-grid">
+        
+        <!-- Category Card -->
+        <div class="category-card">
+          <form>
+            <h4>Flashcards</h4>
+            <div class="form-group">
+              <label for="desc1">Description</label>
+              <textarea id="desc1" rows="3" placeholder="Enter description...">Interactive flashcards for kids</textarea>
+            </div>
+            <div class="card-actions">
+              <button type="submit" class="btn">Save</button>
+              <button type="reset" class="btn delete">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Category Card -->
+        <div class="category-card">
+          <form>
+            <h4>Worksheets</h4>
+            <div class="form-group">
+              <label for="desc2">Description</label>
+              <textarea id="desc2" rows="3" placeholder="Enter description...">Printable worksheets for practice</textarea>
+            </div>
+            <div class="card-actions">
+              <button type="submit" class="btn">Save</button>
+              <button type="reset" class="btn delete">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Category Card -->
+        <div class="category-card">
+          <form>
+            <h4>Stories</h4>
+            <div class="form-group">
+              <label for="desc3">Description</label>
+              <textarea id="desc3" rows="3" placeholder="Enter description...">Short moral and inclusive stories</textarea>
+            </div>
+            <div class="card-actions">
+              <button type="submit" class="btn">Save</button>
+              <button type="reset" class="btn delete">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Category Card -->
+        <div class="category-card">
+          <form>
+            <h4>Games</h4>
+            <div class="form-group">
+              <label for="desc4">Description</label>
+              <textarea id="desc4" rows="3" placeholder="Enter description...">Learning through fun games</textarea>
+            </div>
+            <div class="card-actions">
+              <button type="submit" class="btn">Save</button>
+              <button type="reset" class="btn delete">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
