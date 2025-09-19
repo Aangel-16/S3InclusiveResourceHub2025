@@ -74,7 +74,7 @@ router.get("/viewResources", (req, res) => {
   res.render("user/viewResources");
 });
 
-
+//view community page
 router.get("/communityHub", (req, res) => {
   res.render("user/community");
 });
