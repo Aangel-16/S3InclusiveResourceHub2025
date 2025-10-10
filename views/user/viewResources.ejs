@@ -1,0 +1,140 @@
+<!-- viewResources.ejs file-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resource Library - Inclusive Learning Hub</title>
+  <link rel="stylesheet" href="/css/adminStyle.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <!-- Sidebar -->
+  <%- include("../partials/userSidebar") %>
+  
+  <div class="main-content">
+        <header>
+            <div class="top-bar">
+                <div class="welcome-text">Welcome back, User!</div>
+                <div class="user-profile">
+                    <div class="profile-pic">A</div>
+                    <span>User</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="resource-toolbar">
+            <div class="toolbar-header"><h2>Resource Library</h2></div>
+            <div class="search-box">
+                <input type="text" placeholder="Search resources...">
+            </div>
+            <div class="actions">
+                <a href="#" class="btn">Filter</a>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h3>Browse Resources by Category</h3>
+
+            <% if (staticResources && staticResources.length > 0) { %>
+                <section class="resource-category">
+                    <h4>Static HTML Interactives</h4> 
+                    <div class="resource-grid">
+                        <% staticResources.forEach(resource => { %>
+                            <div class="resource-card">
+                                <h5><%= resource.title %></h5> 
+                                <p><%= resource.description || 'No description provided.' %></p>
+
+                                <div class="card-actions">
+                                    <a href="/flashcards/<%= resource.slug %>" class="btn" target="_blank">Launch Interactive</a>
+                                </div>
+
+                                <p class="updated-info">
+                                    Type: <%= resource.type %> | Static Content
+                                </p>
+                            </div>
+                        <% }) %>
+                    </div>
+                </section>
+            <% } %>
+
+            <% if (staticGames && staticGames.length > 0) { %>
+                <section class="resource-category">
+                    <h4>Static HTML Games</h4> 
+                    <div class="resource-grid">
+                        <% staticGames.forEach(game => { %>
+                            <div class="resource-card">
+                                <h5><%= game.title %></h5> 
+                                <p><%= game.description || 'No description provided.' %></p>
+
+                                <div class="card-actions">
+                                    <a href="/games/<%= game.slug %>" class="btn" target="_blank">Play Game</a>
+                                </div>
+
+                                <p class="updated-info">
+                                    Type: <%= game.type %> | Static Content
+                                </p>
+                            </div>
+                        <% }) %>
+                    </div>
+                </section>
+            <% } %>
+            <% 
+                const dbResourcesExist = Object.keys(dbGroupedResources || {}).length > 0;
+            %>
+            
+            <% if (dbResourcesExist) { %>
+                <% for (const categoryName in dbGroupedResources) { %>
+                    <% if (dbGroupedResources.hasOwnProperty(categoryName)) { %>
+                        <section class="resource-category">
+                            <h4><%= categoryName %></h4> 
+                            <div class="resource-grid">
+                                <% dbGroupedResources[categoryName].forEach(resource => { %>
+                                    <div class="resource-card">
+                                        <h5><%= resource.title %></h5> 
+                                        <p><%= resource.description || 'No description provided.' %></p>
+
+                                        <div class="card-actions">
+                                          <% 
+                                              let viewUrl = '#';
+                                              
+                                              // Determine the "View" URL for external links/videos/files
+                                              if (resource.type === 'link' || (resource.type === 'video' && resource.url && resource.url.startsWith('http'))) {
+                                                  // External URL (like YouTube, Google Drive, etc.)
+                                                  viewUrl = resource.url;
+                                              } else if (resource.url) {
+                                                  // Internal file URL, route through resource view page
+                                                  viewUrl = '/resource/view/' + resource._id;
+                                              }
+                                          %>
+
+                                          <!-- View Resource Button -->
+                                          <a href="<%= viewUrl %>" target="_blank" class="btn">View</a>
+
+                                          <!-- Download Resource Button -->
+                                          <a href="/resource/download/<%= resource._id %>" class="btn">Download</a>
+                                      </div>
+
+
+                                        <p class="updated-info">
+                                            Type: <%= resource.type %>
+                                            <% if (resource.createdAt) { %> | Uploaded <%= new Date(resource.createdAt).toLocaleDateString() %>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                    
+                                <% }) %>
+                            </div>
+                        </section>
+                    <% } %>
+                <% } %>
+            <% } %>
+
+            <% if ((!staticResources || staticResources.length === 0) && (!staticGames || staticGames.length === 0) && !dbResourcesExist) { %>
+                <p>No resources found. Use the "Upload Resource" button to add one.</p>
+            <% } %>
+        </div>
+
+</body>
+</html>

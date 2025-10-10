@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Routine Cards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .category-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .category-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .category-btn.active {
+            background: #ffd93d;
+            color: #333;
+            transform: scale(1.1);
+        }
+
+        .routine-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .routine-title {
+            text-align: center;
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .step-card:hover {
+            transform: scale(1.05);
+        }
+
+        .step-number {
+            background: white;
+            color: #f5576c;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        .step-icon {
+            font-size: 4em;
+            margin: 15px 0;
+        }
+
+        .step-text {
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .audio-btn {
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .progress-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d2ff 0%, #3a47d5 100%);
+            width: 0%;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .complete-btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            background: #4caf50;
+            color: white;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .complete-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        .celebration {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 2em;
+            color: #4caf50;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .celebration.show {
+            display: block;
+            animation: popup 0.5s;
+        }
+
+        @keyframes popup {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 Daily Routine Cards 🌟</h1>
+        
+        <div class="category-selector">
+            <button class="category-btn active" data-routine="brushing">🦷 Brushing Teeth</button>
+            <button class="category-btn" data-routine="washing">🧼 Washing Hands</button>
+            <button class="category-btn" data-routine="eating">🍽️ Eating a Meal</button>
+        </div>
+
+        <div class="routine-container">
+            <h2 class="routine-title" id="routineTitle">Brushing Teeth</h2>
+            <div class="steps-grid" id="stepsGrid"></div>
+            
+            <div class="progress-section">
+                <h3>Your Progress</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill">0%</div>
+                </div>
+                <button class="complete-btn" id="completeBtn">✅ Mark as Complete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration">
+        🎉 Great Job! 🎉<br>
+        <span style="font-size: 0.7em;">You completed the routine!</span>
+    </div>
+
+    <script>
+        const routines = {
+            brushing: {
+                title: '🦷 Brushing Teeth',
+                steps: [
+                    { icon: '🚰', text: 'Turn on the water' },
+                    { icon: '💧', text: 'Wet your toothbrush' },
+                    { icon: '🧴', text: 'Put toothpaste on brush' },
+                    { icon: '😁', text: 'Brush front teeth gently' },
+                    { icon: '🦷', text: 'Brush back teeth' },
+                    { icon: '👅', text: 'Brush your tongue' },
+                    { icon: '💦', text: 'Rinse your mouth' },
+                    { icon: '🧽', text: 'Clean and put away brush' }
+                ]
+            },
+            washing: {
+                title: '🧼 Washing Hands',
+                steps: [
+                    { icon: '🚰', text: 'Turn on warm water' },
+                    { icon: '💧', text: 'Wet both hands' },
+                    { icon: '🧴', text: 'Put soap on hands' },
+                    { icon: '👐', text: 'Rub palms together' },
+                    { icon: '🤲', text: 'Rub between fingers' },
+                    { icon: '⏱️', text: 'Wash for 20 seconds' },
+                    { icon: '💦', text: 'Rinse off all soap' },
+                    { icon: '🧻', text: 'Dry with towel' }
+                ]
+            },
+            eating: {
+                title: '🍽️ Eating a Meal',
+                steps: [
+                    { icon: '🧼', text: 'Wash your hands first' },
+                    { icon: '🪑', text: 'Sit at the table' },
+                    { icon: '🍽️', text: 'Put napkin on your lap' },
+                    { icon: '🥄', text: 'Pick up your spoon/fork' },
+                    { icon: '😋', text: 'Take small bites' },
+                    { icon: '😌', text: 'Chew slowly and carefully' },
+                    { icon: '🥤', text: 'Drink water with your meal' },
+                    { icon: '🧹', text: 'Clean up when finished' }
+                ]
+            }
+        };
+
+        let currentRoutine = 'brushing';
+        let completedSteps = new Set();
+
+        function renderSteps() {
+            const routine = routines[currentRoutine];
+            const stepsGrid = document.getElementById('stepsGrid');
+            const routineTitle = document.getElementById('routineTitle');
+            
+            routineTitle.textContent = routine.title;
+            stepsGrid.innerHTML = '';
+            
+            routine.steps.forEach((step, index) => {
+                const stepCard = document.createElement('div');
+                stepCard.className = 'step-card';
+                stepCard.innerHTML = `
+                    <div class="step-number">${index + 1}</div>
+                    <div class="step-icon">${step.icon}</div>
+                    <div class="step-text">${step.text}</div>
+                    <button class="audio-btn" onclick="speakText('${step.text}')">🔊</button>
+                `;
+                
+                stepCard.addEventListener('click', function() {
+                    completedSteps.add(index);
+                    updateProgress();
+                    this.style.opacity = '0.6';
+                });
+                
+                stepsGrid.appendChild(stepCard);
+            });
+        }
+
+        function updateProgress() {
+            const totalSteps = routines[currentRoutine].steps.length;
+            const completed = completedSteps.size;
+            const percentage = (completed / totalSteps) * 100;
+            
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = percentage + '%';
+            progressFill.textContent = Math.round(percentage) + '%';
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.8;
+                utterance.pitch = 1.2;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentRoutine = this.dataset.routine;
+                completedSteps.clear();
+                renderSteps();
+                updateProgress();
+            });
+        });
+
+        document.getElementById('completeBtn').addEventListener('click', function() {
+            const celebration = document.getElementById('celebration');
+            celebration.classList.add('show');
+            
+            setTimeout(() => {
+                celebration.classList.remove('show');
+                completedSteps.clear();
+                renderSteps();
+                updateProgress();
+            }, 3000);
+        });
+
+        renderSteps();
+    </script>
+</body>
+</html>

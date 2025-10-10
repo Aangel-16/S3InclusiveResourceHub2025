@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realistic Traffic Light Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        .scene-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(to bottom, 
+                #87CEEB 0%, 
+                #87CEEB 30%, 
+                #228B22 30%, 
+                #228B22 65%, 
+                #696969 65%, 
+                #696969 100%);
+            cursor: pointer;
+        }
+
+        /* Road markings */
+        .road-markings {
+            position: absolute;
+            bottom: 15%;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: repeating-linear-gradient(
+                to right,
+                transparent 0px,
+                transparent 40px,
+                #FFFFFF 40px,
+                #FFFFFF 80px
+            );
+        }
+
+        /* Traffic light post setup */
+        .traffic-post {
+            position: absolute;
+            right: 20%;
+            bottom: 35%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .post {
+            width: 15px;
+            height: 250px;
+            background: linear-gradient(to right, #4A4A4A, #6A6A6A, #4A4A4A);
+            border-radius: 8px;
+            box-shadow: 3px 0 8px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .post::before {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: -10px;
+            width: 35px;
+            height: 25px;
+            background: #5A5A5A;
+            border-radius: 5px;
+        }
+
+        .traffic-light-box {
+            width: 80px;
+            height: 200px;
+            background: linear-gradient(145deg, #2A2A2A, #1A1A1A);
+            border-radius: 12px;
+            border: 3px solid #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            padding: 15px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .traffic-light-box::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 25px;
+            height: 15px;
+            background: #2A2A2A;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .light-bulb {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            transition: all 0.6s ease;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .light-bulb::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            width: 15px;
+            height: 12px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .light-bulb.active::before {
+            opacity: 1;
+        }
+
+        /* Light states */
+        .red-light {
+            background: radial-gradient(circle, #2A1A1A, #1A1010);
+        }
+        .red-light.active {
+            background: radial-gradient(circle, #FF1A1A, #CC0000);
+            box-shadow: 
+                inset 0 2px 4px rgba(0,0,0,0.3),
+                0 0 25px rgba(255, 26, 26, 0.8),
+                0 0 50px rgba(255, 26, 26, 0.4);
+        }
+
+        .yellow-light {
+            background: radial-gradient(circle, #2A2A1A, #1A1A10);
+        }
+        .yellow-light.active {
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            box-shadow: 
+                inset 0 2px 4px rgba(0,0,0,0.3),
+                0 0 25px rgba(255, 215, 0, 0.8),
+                0 0 50px rgba(255, 215, 0, 0.4);
+        }
+
+        .green-light {
+            background: radial-gradient(circle, #1A2A1A, #101A10);
+        }
+        .green-light.active {
+            background: radial-gradient(circle, #00FF00, #00CC00);
+            box-shadow: 
+                inset 0 2px 4px rgba(0,0,0,0.3),
+                0 0 25px rgba(0, 255, 0, 0.8),
+                0 0 50px rgba(0, 255, 0, 0.4);
+        }
+
+        /* Message board */
+        .message-board {
+            position: absolute;
+            left: 10%;
+            top: 20%;
+            background: linear-gradient(145deg, #1A1A1A, #2A2A2A);
+            border: 4px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            z-index: 15;
+            max-width: 300px;
+        }
+
+        .message-board::before {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 30px;
+            width: 20px;
+            height: 20px;
+            background: #1A1A1A;
+            border-right: 4px solid #333;
+            border-bottom: 4px solid #333;
+            transform: rotate(45deg);
+        }
+
+        .message-text {
+            color: #FFFFFF;
+            font-size: 1.8em;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.4;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            margin-bottom: 20px;
+        }
+
+        .instruction-text {
+            color: #CCCCCC;
+            font-size: 1.2em;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Action indicator */
+        .action-symbol {
+            position: absolute;
+            left: 50%;
+            bottom: 25%;
+            transform: translateX(-50%);
+            font-size: 6em;
+            z-index: 12;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+            50% { transform: translateX(-50%) scale(1.2); opacity: 1; }
+        }
+
+        /* Environmental elements */
+        .buildings {
+            position: absolute;
+            bottom: 65%;
+            left: 0;
+            right: 0;
+            height: 100px;
+            z-index: 1;
+        }
+
+        .building {
+            position: absolute;
+            border-radius: 3px 3px 0 0;
+            opacity: 0.8;
+        }
+
+        .building:nth-child(1) {
+            left: 5%;
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(145deg, #8B4513, #A0522D);
+        }
+
+        .building:nth-child(2) {
+            left: 15%;
+            width: 45px;
+            height: 65px;
+            background: linear-gradient(145deg, #4682B4, #5F9EA0);
+        }
+
+        .building:nth-child(3) {
+            right: 10%;
+            width: 70px;
+            height: 90px;
+            background: linear-gradient(145deg, #696969, #778899);
+        }
+
+        .building:nth-child(4) {
+            right: 20%;
+            width: 50px;
+            height: 70px;
+            background: linear-gradient(145deg, #B22222, #CD5C5C);
+        }
+
+        .trees {
+            position: absolute;
+            bottom: 65%;
+            left: 0;
+            right: 0;
+            height: 80px;
+            z-index: 2;
+        }
+
+        .tree {
+            position: absolute;
+            font-size: 3em;
+            opacity: 0.9;
+        }
+
+        .tree:nth-child(1) { left: 30%; bottom: 0; }
+        .tree:nth-child(2) { left: 45%; bottom: 5px; font-size: 2.8em; }
+        .tree:nth-child(3) { right: 35%; bottom: 10px; }
+
+        /* Click hint */
+        .click-hint {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+            opacity: 0.7;
+            animation: fade 3s ease-in-out infinite;
+        }
+
+        @keyframes fade {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .traffic-post {
+                right: 15%;
+                bottom: 30%;
+            }
+            
+            .traffic-light-box {
+                width: 60px;
+                height: 150px;
+            }
+            
+            .light-bulb {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .message-board {
+                max-width: 250px;
+                padding: 20px;
+            }
+            
+            .message-text {
+                font-size: 1.4em;
+            }
+            
+            .instruction-text {
+                font-size: 1em;
+            }
+            
+            .action-symbol {
+                font-size: 4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scene-container" onclick="nextLight()" id="sceneContainer">
+        
+        <!-- Traffic Light Post -->
+        <div class="traffic-post">
+            <div class="traffic-light-box">
+                <div class="light-bulb red-light active" id="redLight"></div>
+                <div class="light-bulb yellow-light" id="yellowLight"></div>
+                <div class="light-bulb green-light" id="greenLight"></div>
+            </div>
+            <div class="post"></div>
+        </div>
+
+        <!-- Message Board -->
+        <div class="message-board" id="messageBoard">
+            <div class="message-text" id="messageText">STOP</div>
+            <div class="instruction-text" id="instructionText">Wait here safely</div>
+        </div>
+
+        <!-- Action Symbol -->
+        <div class="action-symbol" id="actionSymbol">🛑</div>
+
+        <!-- Road markings -->
+        <div class="road-markings"></div>
+        
+        <!-- Buildings -->
+        <div class="buildings">
+            <div class="building"></div>
+            <div class="building"></div>
+            <div class="building"></div>
+            <div class="building"></div>
+        </div>
+        
+        <!-- Trees -->
+        <div class="trees">
+            <div class="tree">🌳</div>
+            <div class="tree">🌲</div>
+            <div class="tree">🌳</div>
+        </div>
+        
+        <!-- Click hint -->
+        <div class="click-hint">Click anywhere to change light</div>
+    </div>
+
+    <script>
+        const trafficStates = [
+            {
+                color: 'red',
+                message: 'STOP',
+                instruction: 'Wait here safely',
+                symbol: '🛑'
+            },
+            {
+                color: 'yellow',
+                message: 'GET READY',
+                instruction: 'Prepare to cross',
+                symbol: '⚠️'
+            },
+            {
+                color: 'green',
+                message: 'GO',
+                instruction: 'Cross carefully',
+                symbol: '🚶‍♂️'
+            }
+        ];
+
+        let currentIndex = 0;
+
+        function updateTrafficLight() {
+            const state = trafficStates[currentIndex];
+            const redLight = document.getElementById('redLight');
+            const yellowLight = document.getElementById('yellowLight');
+            const greenLight = document.getElementById('greenLight');
+            const messageText = document.getElementById('messageText');
+            const instructionText = document.getElementById('instructionText');
+            const actionSymbol = document.getElementById('actionSymbol');
+            
+            // Update lights
+            redLight.classList.toggle('active', state.color === 'red');
+            yellowLight.classList.toggle('active', state.color === 'yellow');
+            greenLight.classList.toggle('active', state.color === 'green');
+            
+            // Update message
+            messageText.textContent = state.message;
+            instructionText.textContent = state.instruction;
+            actionSymbol.textContent = state.symbol;
+            
+            // Color the message board based on active light
+            const messageBoard = document.getElementById('messageBoard');
+            if (state.color === 'red') {
+                messageBoard.style.background = 'linear-gradient(145deg, #2A1A1A, #3A1A1A)';
+                messageBoard.style.borderColor = '#FF1A1A';
+            } else if (state.color === 'yellow') {
+                messageBoard.style.background = 'linear-gradient(145deg, #2A2A1A, #3A3A1A)';
+                messageBoard.style.borderColor = '#FFD700';
+            } else {
+                messageBoard.style.background = 'linear-gradient(145deg, #1A2A1A, #1A3A1A)';
+                messageBoard.style.borderColor = '#00FF00';
+            }
+        }
+
+        function nextLight() {
+            currentIndex = (currentIndex + 1) % trafficStates.length;
+            updateTrafficLight();
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', function(event) {
+            if (event.key === ' ' || event.key === 'Enter') {
+                nextLight();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', updateTrafficLight);
+    </script>
+</body>
+</html>

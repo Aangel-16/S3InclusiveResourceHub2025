@@ -1,0 +1,36 @@
+<!-- addCategory.ejs Form (Admin Only): Admin can add both dmin level and regular users -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Category - Admin Module</title>
+  <link rel="stylesheet" href="/css/adminStyle.css">
+
+</head>
+<body>
+  <div class="admin-form-container">
+    <h2 class="admin-form-title">Add New Category</h2>
+
+    <form class="admin-form" action="/admin/addCategory" method="POST">
+      <!-- Category Name -->
+      <div class="form-group">
+        <label for="name">Category Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter category name" required>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" placeholder="Enter description"></textarea>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="submit-btn">
+        <span class="btn-text">Add Category</span>
+      </button>
+    </form>
+  </div>
+</body>
+</html>

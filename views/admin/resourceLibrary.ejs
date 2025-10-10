@@ -1,166 +1,348 @@
-<!-- resourceLibrary.ejs-->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resource Library - Inclusive Learning Hub</title>
-  <link rel="stylesheet" href="/css/adminStyle.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Library - Inclusive Learning Hub</title>
+    <link rel="stylesheet" href="/css/adminStyle.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        /* Sidebar Overlay */
+        .sidebar-overlay { position: fixed; top:0; right:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); z-index:1000; display:none; }
+        .sidebar-overlay.active { display:block; }
+        .sidebar-content { position:absolute; top:0; right:0; width:400px; max-width:100%; height:100%; background-color:#f7fafc; transform:translateX(100%); transition: transform 0.3s ease-in-out; padding:20px; overflow-y:auto; box-shadow:-2px 0 10px rgba(0,0,0,0.2); }
+        .sidebar-overlay.active .sidebar-content { transform:translateX(0); }
+        .sidebar-header { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:20px; }
+        .sidebar-header button { background:none; border:none; font-size:24px; cursor:pointer; }
+
+        /* Form Styles */
+        .admin-form .form-container { display:flex; gap:20px; flex-wrap:wrap; }
+        .admin-form .form-left, .admin-form .form-right { flex:1 1 180px; }
+        .admin-form label { display:block; margin-top:10px; font-weight:bold; }
+        .admin-form input, .admin-form select, .admin-form textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px; }
+        .admin-form textarea { resize:vertical; }
+        .admin-form .thumbnail { width:100%; height:100px; border:2px dashed #ccc; display:flex; align-items:center; justify-content:center; color:#777; margin-bottom:15px; }
+    </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <%- include("../partials/adminSidebar") %>
-  
-  <!-- Main Content -->
-  <div class="main-content">
-    <header>
-       <!-- Top Bar -->
-      <div class="top-bar">
-        <div class="welcome-text">Welcome back, Admin!</div>
-        <div class="user-profile">
-          <div class="profile-pic">A</div>
-          <span>Admin User</span>
-        </div>
-      </div>
-    </header>
+    <%- include("../partials/adminSidebar") %>
 
-    <div class="resource-toolbar">
-    <div class="toolbar-header">
-      <h2>Resource Library</h2>
-      </div>
-      <div class="search-box">
-        <input type="text" placeholder="Search resources...">
-      </div>
-      <div class="actions">
-        <a href="#" class="btn">Filter</a>
-        <a href="#" class="btn">+ Add Resource</a>
-      </div>
+    <div class="main-content">
+        <header>
+            <div class="top-bar">
+                <div class="welcome-text">Welcome back, Admin!</div>
+                <div class="user-profile">
+                    <div class="profile-pic">A</div>
+                    <span>Admin User</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="resource-toolbar">
+            <div class="toolbar-header"><h2>Resource Library</h2></div>
+            <div class="search-box">
+                <input type="text" placeholder="Search resources...">
+            </div>
+            <div class="actions">
+                <a href="#" class="btn">Filter</a>
+                <a href="#" class="action-btn" id="uploadResourceBtn"><i class="fas fa-upload"></i> Upload Resource</a>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h3>Browse Resources by Category</h3>
+
+            <% if (staticResources && staticResources.length > 0) { %>
+                <section class="resource-category">
+                    <h4>Static HTML Interactives</h4> 
+                    <div class="resource-grid">
+                        <% staticResources.forEach(resource => { %>
+                            <div class="resource-card">
+                                <h5><%= resource.title %></h5> 
+                                <p><%= resource.description || 'No description provided.' %></p>
+
+                                <div class="card-actions">
+                                    <a href="/flashcards/<%= resource.slug %>" class="btn" target="_blank">Launch Interactive</a>
+                                </div>
+
+                                <p class="updated-info">
+                                    Type: <%= resource.type %> | Static Content
+                                </p>
+                            </div>
+                        <% }) %>
+                    </div>
+                </section>
+            <% } %>
+
+            <% if (staticGames && staticGames.length > 0) { %>
+                <section class="resource-category">
+                    <h4>Static HTML Games</h4> 
+                    <div class="resource-grid">
+                        <% staticGames.forEach(game => { %>
+                            <div class="resource-card">
+                                <h5><%= game.title %></h5> 
+                                <p><%= game.description || 'No description provided.' %></p>
+
+                                <div class="card-actions">
+                                    <a href="/games/<%= game.slug %>" class="btn" target="_blank">Play Game</a>
+                                </div>
+
+                                <p class="updated-info">
+                                    Type: <%= game.type %> | Static Content
+                                </p>
+                            </div>
+                        <% }) %>
+                    </div>
+                </section>
+            <% } %>
+            <% 
+                const dbResourcesExist = Object.keys(dbGroupedResources || {}).length > 0;
+            %>
+            
+            <% if (dbResourcesExist) { %>
+                <% for (const categoryName in dbGroupedResources) { %>
+                    <% if (dbGroupedResources.hasOwnProperty(categoryName)) { %>
+                        <section class="resource-category">
+                            <h4><%= categoryName %></h4> 
+                            <div class="resource-grid">
+                                <% dbGroupedResources[categoryName].forEach(resource => { %>
+                                    <div class="resource-card">
+                                        <h5><%= resource.title %></h5> 
+                                        <p><%= resource.description || 'No description provided.' %></p>
+
+                                        <div class="card-actions">
+                                            <% 
+                                                let viewUrl = '#';
+                                                if (resource.type === 'link' || (resource.type === 'video' && resource.url && resource.url.startsWith('http'))) {
+                                                    viewUrl = resource.url;
+                                                } else if (resource.url) {
+                                                    viewUrl = '/uploads/resources/' + resource.url;
+                                                }
+                                            %>
+                                            <a href="<%= viewUrl %>" target="_blank" class="btn">View</a>
+                                            
+                                            <a href="#" 
+                                                class="btn edit editResourceBtn" 
+                                                data-resource-id="<%= resource._id %>" 
+                                                data-resource-title="<%= resource.title %>"
+                                                data-resource-description="<%= resource.description %>"
+                                                data-resource-category="<%= resource.category._id %>" 
+                                                data-resource-type="<%= resource.type %>"
+                                                data-resource-url="<%= resource.url %>"
+                                                data-resource-notes="<%= resource.notes || '' %>"
+                                                data-resource-tags="<%= resource.tags || '' %>"
+                                                data-resource-feedback="<%= resource.feedback || '3' %>"
+                                            >
+                                                Edit Details
+                                            </a>
+                                            
+                                            <a href="/admin/deleteResource/<%= resource._id %>" class="btn delete deleteResourceBtn">Delete</a>
+                                        </div>
+
+                                        <p class="updated-info">
+                                            Type: <%= resource.type %>
+                                            <% if (resource.createdAt) { %> | Uploaded <%= new Date(resource.createdAt).toLocaleDateString() %>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        </section>
+                    <% } %>
+                <% } %>
+            <% } %>
+
+            <% if ((!staticResources || staticResources.length === 0) && (!staticGames || staticGames.length === 0) && !dbResourcesExist) { %>
+                <p>No resources found. Use the "Upload Resource" button to add one.</p>
+            <% } %>
+        </div>
+
+
+        <div id="addResourceSidebar" class="sidebar-overlay">
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <h2 id="sidebarTitle">Add Resource</h2>
+                    <button id="closeResourceSidebarBtn">&times;</button>
+                </div>
+
+                <form action="/admin/addResource" method="POST" enctype="multipart/form-data" class="admin-form" id="resourceForm">
+                    <input type="hidden" name="_id" id="resourceIdField"> 
+                    <input type="hidden" name="_method" id="formMethodField" value="POST"> 
+                    
+                    <div class="form-container">
+                        <div class="form-left">
+                            <label>Title</label>
+                            <input type="text" name="title" placeholder="Enter title" required />
+                            
+                            <label>Description</label>
+                            <textarea name="description" placeholder="Enter description" required></textarea>
+                            
+                            <label>Content Type</label>
+                            <select name="type" id="resourceType" required onchange="toggleInputs()">
+                                <option value="">Select type</option>
+                                <option value="video">Video</option>
+                                <option value="pdf">Printable (PDF)</option>
+                                <option value="image">Image</option>
+                                <option value="link">External Link</option>
+                            </select>
+
+                            <div id="urlField" style="display:none;">
+                                <label>Video / Link URL</label>
+                                <input type="url" name="url" placeholder="https://example.com/resource" />
+                            </div>
+
+                            <div id="fileField" style="display:none;">
+                                <label>Upload File</label>
+                                <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.mp4,.mov,.avi" />
+                            </div>
+
+                            <label>Category</label>
+                            <select name="category" required>
+                                <option value="">Select category</option>
+                                <% if (categories) { categories.forEach(cat => { %>
+                                    <option value="<%= cat._id %>"><%= cat.name %></option>
+                                <% }) } %>
+                            </select>
+
+                            <label>Tags (comma-separated)</label>
+                            <input type="text" name="tags" placeholder="e.g. inclusive, learning, activity" />
+                        </div>
+
+                        <div class="form-right">
+                            <div class="thumbnail" id="previewBox">No Preview</div>
+                            
+                            <label>Educator Notes</label>
+                            <textarea name="notes" placeholder="Enter educator notes"></textarea>
+                            
+                            <label>Feedback (1–5)</label>
+                            <input type="range" name="feedback" min="1" max="5" value="3" />
+                            
+                            <button type="submit" class="submit-btn btn-add" id="submitResourceBtn">Add Resource</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
+    <script>
+    // ---------------------- Form Toggle Function ----------------------
+    function toggleInputs() {
+        const type = document.getElementById('resourceType').value;
+        const urlField = document.getElementById('urlField');
+        const fileField = document.getElementById('fileField');
+        const urlInput = urlField.querySelector('input');
+        const fileInput = fileField.querySelector('input');
+
+        urlField.style.display = 'none';
+        fileField.style.display = 'none';
+        urlInput.removeAttribute('required');
+        fileInput.removeAttribute('required');
+        fileInput.value = ''; // Clear file input on type switch
+
+        if (type === 'video' || type === 'link') {
+            urlField.style.display = 'block';
+            urlInput.setAttribute('required', 'required');
+        } else if (type === 'pdf' || type === 'image') {
+            fileField.style.display = 'block';
+            fileInput.setAttribute('required', 'required'); 
+        }
+    }
+
+    // ---------------------- Sidebar OPEN Functions ----------------------
+    function openSidebarForEdit(resource) {
+        const form = document.getElementById('resourceForm');
+        const titleHeader = document.getElementById('sidebarTitle');
+        const submitBtn = document.getElementById('submitResourceBtn');
+
+        titleHeader.textContent = `Edit Resource: ${resource.title}`;
+        submitBtn.textContent = 'Update Resource';
+        form.action = `/admin/editResource/${resource._id}`;
+        form.method = 'POST';
+
+        document.getElementById('resourceIdField').value = resource._id;
+        form.querySelector('input[name="title"]').value = resource.title;
+        form.querySelector('textarea[name="description"]').value = resource.description;
+        
+        // Pre-fill notes, tags, and feedback from data attributes
+        form.querySelector('textarea[name="notes"]').value = resource.notes || '';
+        form.querySelector('input[name="tags"]').value = resource.tags || '';
+        form.querySelector('input[name="feedback"]').value = resource.feedback || '3';
+        
+        form.querySelector('select[name="category"]').value = resource.category; 
+        form.getElementById('resourceType').value = resource.type; 
+
+        const urlInput = form.querySelector('#urlField input[name="url"]');
+        if (urlInput) urlInput.value = resource.url || ''; 
+
+        toggleInputs(); 
+        document.getElementById("addResourceSidebar").classList.add("active");
+    }
+
+    function openSidebarForAdd() {
+        const form = document.getElementById('resourceForm');
+        document.getElementById('sidebarTitle').textContent = 'Add Resource';
+        document.getElementById('submitResourceBtn').textContent = 'Add Resource';
+        form.action = '/admin/addResource';
+        form.method = 'POST';
+        form.reset(); 
+        document.getElementById('resourceIdField').value = '';
+        document.getElementById('resourceType').value = ''; 
+        toggleInputs(); 
+        document.getElementById("addResourceSidebar").classList.add("active");
+    }
+
+    // ---------------------- DOM Ready Listener ----------------------
+    document.addEventListener("DOMContentLoaded", function() {
+        const resourceSidebar = document.getElementById("addResourceSidebar");
+        const closeResourceBtn = document.getElementById("closeResourceSidebarBtn");
+
+        document.getElementById("uploadResourceBtn").addEventListener("click", function(e) {
+            e.preventDefault();
+            openSidebarForAdd();
+        });
+
+        document.addEventListener('click', function(e) {
+          if (e.target.closest('.editResourceBtn')) {
+              e.preventDefault();
+              const btn = e.target.closest('.editResourceBtn');
+              const resource = {
+                  _id: btn.dataset.resourceId,
+                  title: btn.dataset.resourceTitle,
+                  description: btn.dataset.resourceDescription,
+                  category: btn.dataset.resourceCategory,
+                  type: btn.dataset.resourceType,
+                  url: btn.dataset.resourceUrl,
+                  notes: btn.dataset.resourceNotes,
+                  tags: btn.dataset.resourceTags,
+                  feedback: btn.dataset.resourceFeedback
+              };
+              openSidebarForEdit(resource);
+          }
+        });
 
 
+        document.querySelectorAll(".deleteResourceBtn").forEach(button => {
+            button.addEventListener("click", function(e) {
+                e.preventDefault();
+                const resourceUrl = this.getAttribute('href');
+                if (confirm("Are you sure you want to delete this resource? This action cannot be undone.")) {
+                    window.location.href = resourceUrl;
+                }
+            });
+        });
 
-    <div class="content-section">
-      <h3>Browse Resources by Category</h3>
+        closeResourceBtn.addEventListener("click", function() {
+            resourceSidebar.classList.remove("active");
+        });
 
-      <!-- Flashcards -->
-      <section class="resource-category">
-        <h4>Flashcards</h4>
-        <div class="resource-grid">
-
-          <div class="resource-card">
-            <h5>Alphabet Flashcards</h5>
-            <p>Colorful flashcards for A–Z learning.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-
-          <div class="resource-card">
-            <h5>Numbers Flashcards</h5>
-            <p>Flashcards for counting 1–20.</p>
-           <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Worksheets -->
-      <section class="resource-category">
-        <h4>Worksheets</h4>
-        <div class="resource-grid">
-
-          <div class="resource-card">
-            <h5>Math Worksheet</h5>
-            <p>Practice addition and subtraction.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-
-          <div class="resource-card">
-            <h5>Grammar Worksheet</h5>
-            <p>Simple exercises on nouns and verbs.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Stories -->
-      <section class="resource-category">
-        <h4>Stories</h4>
-        <div class="resource-grid">
-
-          <div class="resource-card">
-            <h5>The Clever Rabbit</h5>
-            <p>A short moral story for kids.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-
-          <div class="resource-card">
-            <h5>The Brave Little Turtle</h5>
-            <p>Inspirational children’s story.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Poems -->
-      <section class="resource-category">
-        <h4>Poems</h4>
-        <div class="resource-grid">
-
-          <div class="resource-card">
-            <h5>Twinkle Twinkle</h5>
-            <p>A classic nursery rhyme.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-
-          <div class="resource-card">
-            <h5>Rain Rain Go Away</h5>
-            <p>Popular children’s poem.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
+        window.addEventListener("click", function(e) {
+            if (e.target === resourceSidebar) {
+                resourceSidebar.classList.remove("active");
+            }
+        });
+    });
+    </script>
 </body>
 </html>

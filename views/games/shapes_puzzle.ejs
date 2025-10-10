@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shapes & Colors Puzzle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.3em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .puzzle-area {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .drop-zone {
+            background: #f0f0f0;
+            border: 4px dashed #ccc;
+            border-radius: 20px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+            font-size: 1.2em;
+            color: #888;
+        }
+
+        .drop-zone.drag-over {
+            background: #e0e7ff;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .drop-zone.filled {
+            border-style: solid;
+            border-color: #10b981;
+        }
+
+        .shapes-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .shape {
+            width: 100px;
+            height: 100px;
+            cursor: grab;
+            transition: transform 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shape:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .shape:active {
+            cursor: grabbing;
+        }
+
+        .shape.dragging {
+            opacity: 0.5;
+        }
+
+        .circle {
+            background: #ef4444;
+            border-radius: 50%;
+        }
+
+        .square {
+            background: #3b82f6;
+            border-radius: 10px;
+        }
+
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 87px solid #10b981;
+        }
+
+        .success-message {
+            text-align: center;
+            font-size: 2em;
+            color: #10b981;
+            margin-top: 20px;
+            display: none;
+            animation: bounce 0.6s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .reset-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .reset-btn:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .label {
+            font-size: 0.9em;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .puzzle-area {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Shapes & Colors Puzzle 🎨</h1>
+        <p class="instruction">Drag each shape to its matching spot!</p>
+        
+        <div class="puzzle-area">
+            <div class="drop-zone" data-shape="circle">
+                <div>🔴 Red Circle</div>
+            </div>
+            <div class="drop-zone" data-shape="square">
+                <div>🔷 Blue Square</div>
+            </div>
+            <div class="drop-zone" data-shape="triangle">
+                <div>🟢 Green Triangle</div>
+            </div>
+        </div>
+
+        <div class="shapes-container">
+            <div class="shape circle" draggable="true" data-shape="circle"></div>
+            <div class="shape square" draggable="true" data-shape="square"></div>
+            <div class="shape triangle" draggable="true" data-shape="triangle"></div>
+        </div>
+
+        <div class="success-message" id="successMsg">🎉 Amazing Job! You Did It! 🎉</div>
+        
+        <button class="reset-btn" onclick="resetPuzzle()">Play Again</button>
+    </div>
+
+    <script>
+        let draggedElement = null;
+        let correctPlacements = 0;
+
+        const shapes = document.querySelectorAll('.shape');
+        const dropZones = document.querySelectorAll('.drop-zone');
+
+        shapes.forEach(shape => {
+            shape.addEventListener('dragstart', dragStart);
+            shape.addEventListener('dragend', dragEnd);
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', dragOver);
+            zone.addEventListener('drop', drop);
+            zone.addEventListener('dragleave', dragLeave);
+        });
+
+        function dragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+        }
+
+        function dragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        }
+
+        function dragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+
+            const dropZoneShape = this.getAttribute('data-shape');
+            const draggedShape = draggedElement.getAttribute('data-shape');
+
+            if (dropZoneShape === draggedShape && !this.classList.contains('filled')) {
+                const clonedShape = draggedElement.cloneNode(true);
+                clonedShape.draggable = false;
+                clonedShape.style.cursor = 'default';
+                
+                this.innerHTML = '';
+                this.appendChild(clonedShape);
+                this.classList.add('filled');
+                
+                draggedElement.style.display = 'none';
+                
+                correctPlacements++;
+                
+                playSound();
+                
+                if (correctPlacements === 3) {
+                    setTimeout(() => {
+                        document.getElementById('successMsg').style.display = 'block';
+                        playCelebration();
+                    }, 300);
+                }
+            }
+        }
+
+        function playSound() {
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUKbh7bJnHwU7k9n0yHkpBSp+y/Delj8LFmG26+mmVBELR6Hf8bllHAUpgs/z3IowBxtra/Hqn1APDk+k4+qzaB8GM5PY88p5KwUrf8vw3pVBDBVhtuvopVUSC0ei4PKzYSMFKoLP8t2JNQUYZ7zt451IDAJIo+LqsWQcBzWR2PTIeSsFK4DN8d6UQQwVYbbs6KZWEgtJouDvs2IfBSuBzvLciTcIG2m88OOdTAwOT6bi67FnHgU6k9jzyHgrBSt/y+/dlEAMFF+06+mlVRIKSKHe7rJkHQUqgc3y3Yo3Bxpquu/jnU4MDU+k4eqxZh0FO5PY88p5KwUrfsrv3JY/CxRhterpplYSC0mh3+6yZB4FKoHO8tyKNwcaam/w4p1PDQ1PpOHqsWYdBTuT2PTKeSwFKn7K792UQAoVX7Tr6aVWEQpIot/vsmQeBSqBzvLcijYHGmpt7+OdTgwNT6Th6rFmHQU7k9jzynosBSp+yu/dlEAKFF+z6+ilVhEKSKLf77NlHgUrgs7y3Io2Bhpqbe/jnU4MDU+j4eqxZh4FO5PY88p5KwUqfsrv3ZVADBRQ=');
+            audio.volume = 0.3;
+            audio.play().catch(() => {});
+        }
+
+        function playCelebration() {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    playSound();
+                }, i * 200);
+            }
+        }
+
+        function resetPuzzle() {
+            correctPlacements = 0;
+            document.getElementById('successMsg').style.display = 'none';
+            
+            dropZones.forEach(zone => {
+                zone.innerHTML = zone.getAttribute('data-shape') === 'circle' ? '<div>🔴 Red Circle</div>' :
+                                 zone.getAttribute('data-shape') === 'square' ? '<div>🔷 Blue Square</div>' :
+                                 '<div>🟢 Green Triangle</div>';
+                zone.classList.remove('filled');
+            });
+            
+            shapes.forEach(shape => {
+                shape.style.display = 'flex';
+            });
+        }
+    </script>
+</body>
+</html>

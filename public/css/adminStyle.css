@@ -142,7 +142,7 @@
 
 /* ================== MAIN CONTENT OF ADMIN SIDE BAR - THE FIRST PAGE AFTER LOGED IN ==================*/
 .main-content {
-  margin-left: 250px; 
+  margin-left: 260px; 
   padding: 20px;
   transition: margin-left 0.3s ease;
 }
@@ -382,7 +382,126 @@
     }
 }
 
+/*  ADD USER FROM ADMIN DASHBOARD - SIDEBAR PANEL  */
 
+
+/* Sidebar Overlay */
+#addUserSidebar.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  right: -520px; /* hidden by default */
+  width: 500px;
+  height: 100%;
+  background: #fff;
+  box-shadow: -3px 0 12px rgba(0,0,0,0.2);
+  overflow-y: auto;
+  transition: right 0.3s ease;
+  z-index: 2000;
+  border-left: 4px solid #d73527;
+}
+
+/* When visible */
+#addUserSidebar.sidebar-overlay.active {
+  right: 0;
+}
+
+/* Sidebar Content */
+#addUserSidebar .sidebar-content {
+  padding: 25px;
+  font-family: inherit;
+}
+
+#addUserSidebar .sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+#addUserSidebar .sidebar-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+#addUserSidebar #closeSidebarBtn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.2s ease;
+}
+
+#addUserSidebar #closeSidebarBtn:hover {
+  color: #d73527;
+}
+
+/* Form Styling */
+#addUserSidebar .admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#addUserSidebar .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+#addUserSidebar .form-group label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+#addUserSidebar .form-group input,
+#addUserSidebar .form-group select {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+#addUserSidebar .form-group input:focus,
+#addUserSidebar .form-group select:focus {
+  border-color: #d73527;
+}
+
+/* Submit Button */
+#addUserSidebar .submit-btn {
+  background: linear-gradient(135deg, #d73527, #c02d20);
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#addUserSidebar .submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(215, 53, 39, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #addUserSidebar.sidebar-overlay {
+    width: 100%;
+    right: -100%;
+  }
+
+  #addUserSidebar.sidebar-overlay.active {
+    right: 0;
+  }
+}
 
 
 /*============================== LIST EDUCATORS =================== */
@@ -435,6 +554,55 @@
   text-decoration: none;
   font-size: 14px;
 }
+
+/* View Profile Modal*/
+/* Profile Modal Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-card {
+  background: #fff;
+  border-radius: 15px;
+  padding: 25px;
+  width: 420px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.profile-photo img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 15px 0;
+}
+
+
+
 
 /* ====================== RESOURCE LIBRARY ============================== */
 
@@ -847,4 +1015,96 @@
 .categories-page .category-toolbar .actions .add-category:hover {
   opacity: 0.9;
   transform: translateY(-2px);
+}
+
+/* ==================== COMMON FORM STYLES (Admin Module) ==================== */
+.admin-form-container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 25px 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.admin-form-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Form Groups */
+.admin-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-form .form-group label {
+  font-weight: 500;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.admin-form .form-group input,
+.admin-form .form-group select,
+.admin-form .form-group textarea {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.admin-form .form-group input:focus,
+.admin-form .form-group select:focus,
+.admin-form .form-group textarea:focus {
+  border-color: #d73527;
+  box-shadow: 0 0 0 2px rgba(215, 53, 39, 0.15);
+  outline: none;
+}
+
+/* Dropdowns */
+.admin-form .form-group select {
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* Buttons */
+.admin-form .submit-btn,
+.admin-form .btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #d73527, #c02d20);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-form .submit-btn:hover,
+.admin-form .btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .admin-form-container {
+    padding: 20px;
+  }
 }

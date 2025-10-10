@@ -1,3 +1,4 @@
+<!-- addResources.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -146,72 +147,72 @@
   </style>
 </head>
 <body>
+  <div class="main">
+    <h2>Add Resource</h2>
 
-    <!-- Main Content -->
-    <div class="main">
-      <h2>Add Resource</h2>
-
-      <!-- Left Side -->
-      <div class="form-left">
-        <div>
+    <form action="/admin/addResource" method="POST" enctype="multipart/form-data">
+      <div class="form-container">
+        <!-- Left -->
+        <div class="form-left">
           <label>Title</label>
-          <input type="text" placeholder="Enter title" />
-        </div>
+          <input type="text" name="title" placeholder="Enter title" required />
 
-        <div>
           <label>Description</label>
-          <input type="text" placeholder="Enter description" />
-        </div>
+          <textarea name="description" placeholder="Enter description"></textarea>
 
-        <div>
-          <label>Video URL</label>
-          <input type="url" placeholder="https://example.com/video" />
-        </div>
-
-        <div>
-          <label>Category</label>
-          <select>
-            <option>Select category</option>
-          </select>
-        </div>
-
-        <div>
           <label>Content Type</label>
-          <select>
-            <option>Select content type</option>
+          <select name="type" id="type" required onchange="toggleInputs()">
+            <option value="">Select type</option>
+            <option value="video">Video</option>
+            <option value="pdf">Printable (PDF)</option>
+            <option value="image">Image</option>
+            <option value="link">External Link</option>
           </select>
+
+          <div id="urlField" style="display:none;">
+            <label>Video / Link URL</label>
+            <input type="url" name="url" placeholder="https://example.com/resource" />
+          </div>
+
+          <div id="fileField" style="display:none;">
+            <label>Upload File</label>
+            <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png" />
+          </div>
+
+          <label>Category</label>
+          <select name="category" required>
+            <option value="">Select category</option>
+            <% categories.forEach(cat => { %>
+              <option value="<%= cat.name %>"><%= cat.name %></option>
+            <% }) %>
+          </select>
+
+          <label>Tags (comma-separated)</label>
+          <input type="text" name="tags" placeholder="e.g. inclusive, learning, activity" />
         </div>
 
-        <div class="assets">
-          <label><input type="checkbox" checked /> Audio Narration</label>
-          <label><input type="checkbox" checked /> Visual Description</label>
-        </div>
-      </div>
+        <!-- Right -->
+        <div class="form-right">
+          <div class="thumbnail" id="previewBox">No Preview</div>
 
-      <!-- Right Side -->
-      <div class="form-right">
-        <div class="thumbnail">▶</div>
-
-        <div class="switches">
-          <label>Audio Narration <input type="checkbox" checked /></label>
-          <label>Visual Description <input type="checkbox" checked /></label>
-        </div>
-
-        <div>
           <label>Educator Notes</label>
-          <input type="text" placeholder="Enter notes" />
-        </div>
+          <textarea name="notes" placeholder="Enter educator notes"></textarea>
 
-        <div>
-          <label>Feedback</label>
-          <small style="display:block; margin-bottom: 5px;">How suitable is the game?</small>
-          <input type="range" min="1" max="5" class="slider" />
-        </div>
+          <label>Feedback (1–5)</label>
+          <input type="range" name="feedback" min="1" max="5" />
 
-        <button class="btn-add">Add</button>
+          <button type="submit" class="btn-add">Add Resource</button>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 
+  <script>
+    function toggleInputs() {
+      const type = document.getElementById("type").value;
+      document.getElementById("urlField").style.display = (type === "video" || type === "link") ? "block" : "none";
+      document.getElementById("fileField").style.display = (type === "pdf" || type === "image") ? "block" : "none";
+    }
+  </script>
 </body>
 </html>

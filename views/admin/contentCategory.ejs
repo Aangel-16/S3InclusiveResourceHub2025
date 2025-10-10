@@ -1,113 +1,330 @@
-<!-- views/admin/manageCategories.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Content Categories - Inclusive Learning Hub</title>
-  <link rel="stylesheet" href="/css/adminStyle.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Content Categories - Inclusive Learning Hub</title>
+    <link rel="stylesheet" href="/css/adminStyle.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+      /* Sidebar base (hidden) */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  right: -100%; /* hide offscreen initially */
+  width: 400px;
+  height: 100%;
+  background: #fff;
+  transition: right 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+/* When active, slide in */
+.sidebar-overlay.active {
+  right: 0;
+}
+
+/* =========================
+   STANDARDIZED SIDEBAR STYLING
+========================= */
+
+.sidebar-overlay .sidebar-content {
+  width: 100%;
+  max-width: 380px;
+  height: 100%;
+  background: #ffffff;
+  border-left: 4px solid #ed1616;
+  box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+  padding: 25px 30px;
+  margin-top: 30px;
+  border-radius: 10px 0 0 10px;
+}
+
+/* Header */
+.sidebar-overlay .sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.sidebar-overlay .sidebar-header h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.sidebar-overlay .sidebar-header button {
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.2s ease;
+}
+
+.sidebar-overlay .sidebar-header button:hover {
+  color: #ed1616;
+}
+
+/* --- Form Styling --- */
+.sidebar-overlay .admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar-overlay .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-overlay label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.sidebar-overlay input[type="text"],
+.sidebar-overlay textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fafafa;
+  transition: all 0.2s ease;
+  resize: none;
+}
+
+.sidebar-overlay input:focus,
+.sidebar-overlay textarea:focus {
+  border-color: #ea2c2c;
+  background: #fff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(237, 22, 22, 0.15);
+}
+
+/* --- Submit Button --- */
+.sidebar-overlay .submit-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: #f10808;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.sidebar-overlay .submit-btn:hover {
+  background: #f51515;
+  transform: translateY(-1px);
+}
+
+.sidebar-overlay .submit-btn:active {
+  transform: translateY(0);
+}
+
+.sidebar-overlay .btn-text {
+  margin-left: 5px;
+}
+
+    </style>
 </head>
 <body class="categories-page">
 
-  <!-- Sidebar -->
-  <%- include("../partials/adminSidebar") %>
+    <%- include("../partials/adminSidebar") %>
 
-   <!-- Main Content -->
-  <div class="main-content">
-    <header>
-       <!-- Top Bar -->
-      <div class="top-bar">
-        <div class="welcome-text">Welcome back, Admin!</div>
-        <div class="user-profile">
-          <div class="profile-pic">A</div>
-          <span>Admin User</span>
-        </div>
-      </div>
-    </header>
+    <div class="main-content">
+        <header>
+            <div class="top-bar">
+                <div class="welcome-text">Welcome back, Admin!</div>
+                <div class="user-profile">
+                    <div class="profile-pic">A</div>
+                    <span>Admin User</span>
+                </div>
+            </div>
+        </header>
 
-    <div class="content-section">
-      <!-- Page Heading -->
-      <header>
-        <h2>Content Categories</h2>
-      </header>
-
-      <!-- Toolbar -->
-        <div class="category-toolbar">
+        <div class="resource-toolbar">
+            <div class="toolbar-header">
+                <h2>Content Category</h2>
+            </div>
             <div class="search-box">
-            <input type="text" placeholder="Search categories...">
+                <input type="text" placeholder="Search categories...">
             </div>
             <div class="actions">
-            <button class="btn add-category">+ Add New Category</button>
+                <a href="#" class="btn">Filter</a>
+                <a href="#" id="openAddCategoryBtn" class="btn">+ Add Category</a>
             </div>
         </div>
 
-      <!-- Categories Grid -->
-      <div class="category-grid">
-        
-        <!-- Category Card -->
-        <div class="category-card">
-          <form>
-            <h4>Flashcards</h4>
-            <div class="form-group">
-              <label for="desc1">Description</label>
-              <textarea id="desc1" rows="3" placeholder="Enter description...">Interactive flashcards for kids</textarea>
-            </div>
-            <div class="card-actions">
-              <button type="submit" class="btn">Save</button>
-              <button type="reset" class="btn delete">Cancel</button>
-            </div>
-          </form>
-        </div>
+        <div class="category-grid">
+            
+            <% if (categories && categories.length > 0) { %>
+                <% categories.forEach(category => { %>
+                    <div class="category-card" data-id="<%= category._id %>" data-name="<%= category.name %>" data-description="<%= category.description %>">
+                        <form id="editForm-<%= category._id %>" action="/admin/editCategory/<%= category._id %>" method="POST" style="display: none;">
+                            </form>
 
-        <!-- Category Card -->
-        <div class="category-card">
-          <form>
-            <h4>Worksheets</h4>
-            <div class="form-group">
-              <label for="desc2">Description</label>
-              <textarea id="desc2" rows="3" placeholder="Enter description...">Printable worksheets for practice</textarea>
-            </div>
-            <div class="card-actions">
-              <button type="submit" class="btn">Save</button>
-              <button type="reset" class="btn delete">Cancel</button>
-            </div>
-          </form>
-        </div>
+                        <div class="card-display">
+                            <h4><%= category.name %></h4>
+                            <p class="description-preview"><%= category.description.substring(0, 100) %>...</p>
+                            <div class="card-actions">
+                                <button type="button" class="btn edit-btn" data-id="<%= category._id %>">Edit</button>
+                                <button type="button" class="btn delete-btn" data-id="<%= category._id %>">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No categories found. Click 'Add Category' to create one.</p>
+            <% } %>
 
-        <!-- Category Card -->
-        <div class="category-card">
-          <form>
-            <h4>Stories</h4>
-            <div class="form-group">
-              <label for="desc3">Description</label>
-              <textarea id="desc3" rows="3" placeholder="Enter description...">Short moral and inclusive stories</textarea>
-            </div>
-            <div class="card-actions">
-              <button type="submit" class="btn">Save</button>
-              <button type="reset" class="btn delete">Cancel</button>
-            </div>
-          </form>
         </div>
-
-        <!-- Category Card -->
-        <div class="category-card">
-          <form>
-            <h4>Games</h4>
-            <div class="form-group">
-              <label for="desc4">Description</label>
-              <textarea id="desc4" rows="3" placeholder="Enter description...">Learning through fun games</textarea>
-            </div>
-            <div class="card-actions">
-              <button type="submit" class="btn">Save</button>
-              <button type="reset" class="btn delete">Cancel</button>
-            </div>
-          </form>
-        </div>
-
-      </div>
     </div>
-  </div>
 
+    <div id="addUserSidebar" class="sidebar-overlay">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <h2>Add Category</h2>
+                <button id="closeSidebarBtn">&times;</button>
+            </div>
+            <form class="admin-form" action="/admin/addCategory" method="POST">
+                <div class="form-group">
+                    <label for="name">Category Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter category name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Enter description"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <span class="btn-text">Add Category</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="editCategorySidebar" class="sidebar-overlay">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <h2>Edit Category</h2>
+                <button id="closeEditSidebarBtn">&times;</button>
+            </div>
+            
+            <form id="editForm" class="admin-form" method="POST">
+                <input type="hidden" id="edit-category-id" name="id">
+
+                <div class="form-group">
+                    <label for="edit-name">Category Name</label>
+                    <input type="text" id="edit-name" name="name" placeholder="Enter category name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-description">Description</label>
+                    <textarea id="edit-description" name="description" placeholder="Enter description"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span class="btn-text">Save Changes</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // --- SIDEBAR TOGGLE LOGIC (ADD) ---
+            const openAddBtn = document.getElementById('openAddCategoryBtn');
+            const addSidebar = document.getElementById("addUserSidebar");
+            const closeAddBtn = document.getElementById("closeSidebarBtn");
+            
+            openAddBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                addSidebar.classList.add("active");
+            });
+            closeAddBtn.addEventListener("click", function() {
+                addSidebar.classList.remove("active");
+            });
+
+            // --- SIDEBAR TOGGLE LOGIC (EDIT) ---
+const editSidebar = document.getElementById("editCategorySidebar");
+const closeEditBtn = document.getElementById("closeEditSidebarBtn");
+const editForm = document.getElementById("editForm");
+const editNameInput = document.getElementById("edit-name");
+const editDescriptionInput = document.getElementById("edit-description");
+
+// Open edit sidebar and populate fields
+document.querySelectorAll(".edit-btn").forEach(button => {
+    button.addEventListener("click", function() {
+        const card = this.closest(".category-card");
+        const id = card.getAttribute("data-id");
+        const name = card.getAttribute("data-name");
+        const description = card.getAttribute("data-description");
+
+        // Populate form
+        editForm.action = `/admin/editCategory/${id}`;
+        editNameInput.value = name;
+        editDescriptionInput.value = description;
+
+            // Show sidebar
+            editSidebar.classList.add("active");
+        });
+          });
+
+          // Close button
+          closeEditBtn.addEventListener("click", function() {
+              editSidebar.classList.remove("active");
+          });
+
+          // Close if clicking outside
+          window.addEventListener("click", function(e) {
+              if (e.target === editSidebar) {
+                  editSidebar.classList.remove("active");
+              }
+          });
+
+            // --- DELETE CONFIRMATION LOGIC (omitted for brevity) ---
+            document.querySelectorAll(".delete-btn").forEach(button => {
+                button.addEventListener("click", function(e) {
+                    const categoryId = this.getAttribute("data-id");
+                    const categoryName = this.closest(".category-card").getAttribute("data-name");
+                    
+                    if (confirm(`Are you sure you want to delete the category: "${categoryName}"? This action cannot be undone.`)) {
+                        const deleteForm = document.createElement('form');
+                        deleteForm.method = 'POST';
+                        deleteForm.action = `/admin/deleteCategory/${categoryId}`;
+                        document.body.appendChild(deleteForm);
+                        deleteForm.submit();
+                    }
+                });
+            });
+
+            // Optional: Close if clicking outside sidebar
+            window.addEventListener("click", function(e) {
+                if (e.target === addSidebar) {
+                    addSidebar.classList.remove("active");
+                }
+                if (e.target === editSidebar) {
+                    editSidebar.classList.remove("active");
+                    editSidebar.style.display = 'none'; // Also hide if clicking outside
+                }
+            });
+        });
+    </script>
 </body>
 </html>
