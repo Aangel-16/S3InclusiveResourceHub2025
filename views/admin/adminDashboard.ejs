@@ -5,32 +5,113 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard - Inclusive Learning Hub</title>
 
-  <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-  <!-- Custom Styles -->
   <link rel="stylesheet" href="/css/adminStyle.css">
   <style>
     /* Ensure charts have a proper height */
     .charts-section canvas {
       width: 100% !important;
       max-width: 500px;
-      height: 300px !important;   /* fixed height */
+      height: 300px !important; /* fixed height */
       display: block;
       margin: 0 auto;
+    }
+    
+    /* Styles for Sidebars (Assume this exists in adminStyle.css or similar) */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 0; /* Initially closed */
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      overflow-x: hidden;
+      transition: width 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay.active {
+      width: 100%;
+    }
+
+    .sidebar-content {
+      position: absolute;
+      right: 0;
+      width: 400px; /* Sidebar width */
+      max-width: 100%;
+      height: 100%;
+      background-color: #f7fafc;
+      box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar-overlay.active .sidebar-content {
+      transform: translateX(0);
+    }
+    
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    
+    .sidebar-header button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    
+    /* Styles for Resource Form Layout */
+    .admin-form .form-container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap; /* Allows sections to stack on small screens */
+    }
+    .admin-form .form-left, .admin-form .form-right {
+        flex: 1 1 180px; /* Flexible width for form sections */
+    }
+    .admin-form label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    .admin-form input, .admin-form textarea, .admin-form select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .admin-form textarea {
+        resize: vertical;
+    }
+    .admin-form .thumbnail {
+        width: 100%;
+        height: 100px;
+        border: 2px dashed #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+        margin-bottom: 15px;
     }
   </style>
 </head>
 <body>
   <div class="dashboard-container">
     
-    <!-- Sidebar include -->
     <%- include("../partials/adminSidebar") %>
 
-    <!-- Main Content -->
     <main class="main-content">
       
-      <!-- Top Bar -->
       <div class="top-bar">
         <div class="welcome-text">Welcome back, Admin!</div>
         <div class="user-profile">
@@ -41,14 +122,12 @@
 
       <div class="content-area">
         
-        <!-- Quick Actions -->
         <section class="quick-actions">
-          <a href="#" class="action-btn"><i class="fas fa-upload"></i> Upload Resource</a>
-          <a href="/admin/addUser" class="action-btn"><i class="fas fa-user-plus"></i> Add User</a>
+          <a href="#" class="action-btn" id="uploadResourceBtn"><i class="fas fa-upload"></i> Upload Resource</a>
+          <a href="/admin/addUser" class="action-btn" id="addUserQuickBtn"><i class="fas fa-user-plus"></i> Add User</a>
           <a href="/admin/listEducators" class="action-btn"><i class="fas fa-tags"></i> View Users</a>
         </section>
 
-        <!-- Stats Cards -->
         <section class="stats-grid">
           <div class="stat-card">
             <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
@@ -72,19 +151,17 @@
           </div>
         </section>
 
-        <!-- Charts Section -->
         <section class="charts-section">
           <div class="chart-card">
             <div class="chart-title">Resource Usage by Disability Type</div>
-            <canvas id="engagementChart" width="500" height="300"></canvas> <!--  fixed attributes -->
+            <canvas id="engagementChart" width="500" height="300"></canvas>
           </div>
           <div class="chart-card">
             <div class="chart-title">Content Type Distribution</div>
-            <canvas id="contentChart" width="500" height="300"></canvas> <!--  fixed attributes -->
+            <canvas id="contentChart" width="500" height="300"></canvas>
           </div>
         </section>
 
-        <!-- Recent Activity -->
         <section class="activity-section">
           <div class="chart-title">Recent Platform Activity</div>
 
@@ -132,12 +209,132 @@
     </main>
   </div>
 
-  <!-- Accessibility Indicator -->
   <div class="accessibility-indicator" title="Accessibility Tools">
     <i class="fas fa-universal-access"></i>
   </div>
 
-  <!-- Inline Chart Scripts -->
+  <div id="addUserSidebar" class="sidebar-overlay">
+  <div class="sidebar-content">
+    <div class="sidebar-header">
+      <h2>Add New User</h2>
+      <button id="closeUserSidebarBtn">&times;</button>
+    </div>
+    
+    <form class="admin-form" id="addUserForm" action="/admin/addUser" method="POST">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" name="firstName" placeholder="Enter first name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" name="lastName" placeholder="Enter last name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="userEmail">Email Address</label>
+      <input type="email" id="userEmail" name="email" placeholder="Enter email" required>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
+    </div>
+
+    <div class="form-group">
+      <label for="userPassword">Password</label>
+      <input type="password" id="userPassword" name="password" placeholder="Set a password" required>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+    </div>
+
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select id="role" name="role" required>
+      <option value="">-- Select Role --</option>
+      <option value="admin">Admin</option>
+      <option value="teacher">Teacher</option>
+      </select>
+
+    </div>
+
+    <button type="submit" class="submit-btn">
+      <span class="btn-text">Add User</span>
+    </button>
+  </form>
+  </div>
+  </div>
+
+
+  <div id="addResourceSidebar" class="sidebar-overlay">
+  <div class="sidebar-content">
+    <div class="sidebar-header">
+      <h2>Add Resource</h2>
+      <button id="closeResourceSidebarBtn">&times;</button>
+    </div>
+
+    <form action="/admin/addResource" method="POST" enctype="multipart/form-data" class="admin-form">
+      <div class="form-container">
+        <div class="form-left">
+          <label>Title</label>
+          <input type="text" name="title" placeholder="Enter title" required />
+
+          <label>Description</label>
+          <textarea name="description" placeholder="Enter description"></textarea>
+
+          <label>Content Type</label>
+          <select name="type" id="resourceType" required onchange="toggleInputs()">
+            <option value="">Select type</option>
+            <option value="video">Video</option>
+            <option value="pdf">Printable (PDF)</option>
+            <option value="image">Image</option>
+            <option value="link">External Link</option>
+          </select>
+
+          <div id="urlField" style="display:none;">
+            <label>Video / Link URL</label>
+            <input type="url" name="url" placeholder="https://example.com/resource" />
+          </div>
+
+          <div id="fileField" style="display:none;">
+            <label>Upload File</label>
+            <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png" />
+          </div>
+
+         <label>Category</label>
+          <select name="category" required>
+            <option value="">Select category</option>
+            <% if (typeof categories !== 'undefined') { %>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat.name %>"><%= cat.name %></option>
+              <% }) %>
+            <% } %>
+          </select>
+
+          <label>Tags (comma-separated)</label>
+          <input type="text" name="tags" placeholder="e.g. inclusive, learning, activity" />
+        </div>
+
+        <div class="form-right">
+          <div class="thumbnail" id="previewBox">No Preview</div>
+
+          <label>Educator Notes</label>
+          <textarea name="notes" placeholder="Enter educator notes"></textarea>
+
+          <label>Feedback (1–5)</label>
+          <input type="range" name="feedback" min="1" max="5" value="3" />
+
+          <button type="submit" class="submit-btn btn-add">Add Resource</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  </div>
+
+
   <script>
     function resizeCanvas(canvas) {
       // Only resize if canvas has height
@@ -238,6 +435,81 @@
     window.addEventListener('load', drawCharts);
     window.addEventListener('resize', drawCharts);
   </script>
+
+  <script>
+  // Function to toggle URL/File inputs in the Add Resource Form
+  function toggleInputs() {
+    const type = document.getElementById('resourceType').value;
+    const urlField = document.getElementById('urlField');
+    const fileField = document.getElementById('fileField');
+    const urlInput = urlField.querySelector('input');
+    const fileInput = fileField.querySelector('input');
+
+    // Reset visibility and required status
+    urlField.style.display = 'none';
+    fileField.style.display = 'none';
+    urlInput.removeAttribute('required');
+    fileInput.removeAttribute('required');
+    urlInput.value = '';
+    fileInput.value = '';
+
+    if (type === 'video' || type === 'link') {
+      urlField.style.display = 'block';
+      urlInput.setAttribute('required', 'required');
+    } else if (type === 'pdf' || type === 'image') {
+      fileField.style.display = 'block';
+      fileInput.setAttribute('required', 'required');
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    // --- User Sidebar Logic (Open/Close) ---
+    const addUserBtn = document.getElementById("addUserQuickBtn");
+    const userSidebar = document.getElementById("addUserSidebar");
+    const closeUserBtn = document.getElementById("closeUserSidebarBtn");
+
+    // Open user sidebar
+    addUserBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      userSidebar.classList.add("active");
+    });
+
+    // Close user sidebar
+    closeUserBtn.addEventListener("click", function() {
+      userSidebar.classList.remove("active");
+    });
+    
+    // --- Resource Sidebar Logic (Open/Close) ---
+    const addResourceBtn = document.getElementById("uploadResourceBtn");
+    const resourceSidebar = document.getElementById("addResourceSidebar");
+    const closeResourceBtn = document.getElementById("closeResourceSidebarBtn");
+
+    // Open resource sidebar
+    addResourceBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      resourceSidebar.classList.add("active");
+    });
+
+    // Close resource sidebar
+    closeResourceBtn.addEventListener("click", function() {
+      resourceSidebar.classList.remove("active");
+    });
+
+
+    // Optional: Close sidebars if clicking outside
+    window.addEventListener("click", function(e) {
+      if (e.target === userSidebar) {
+        userSidebar.classList.remove("active");
+      }
+      if (e.target === resourceSidebar) {
+        resourceSidebar.classList.remove("active");
+      }
+    });
+    
+    // Initialize the conditional inputs
+    toggleInputs();
+  });
+</script>
 
   
 </body>

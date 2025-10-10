@@ -1,201 +1,446 @@
-<!-- Comunity page-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Community Forum - Inclusive Learning Hub</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <link rel="stylesheet" href="/css/userStyle.css">
-  <style>
+    <meta charset="UTF-8">
+    <title>Community Forum - Inclusive Learning Hub</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/userStyle.css">
+
+    <style>
+    /* ============================
+       Base Layout
+    ============================ */
     * {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
       box-sizing: border-box;
     }
 
     body {
+      background: #fafafa;
+      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .dashboard-container {
       display: flex;
-      background: #f4f6f8;
+      min-height: 100vh;
     }
 
-    .sidebar {
-      width: 250px;
-      background: #d32f2f;
-      color: white;
-      height: 100vh;
-      padding-top: 20px;
-      position: fixed;
+    .main-content {
+      flex: 1;
+      padding: 30px 40px;
     }
 
-    .sidebar .logo {
-      font-size: 1.6rem;
-      font-weight: bold;
-      text-align: center;
+    /* ============================
+       Header Section
+    ============================ */
+    .user-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 30px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
     }
 
-    .sidebar ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .sidebar li {
-      padding: 15px 25px;
-      cursor: pointer;
+    .profile {
       display: flex;
       align-items: center;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
     }
 
-    .sidebar li:hover,
-    .sidebar li.active {
-      background-color: #b71c1c;
-    }
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-    .sidebar .material-icons {
-      margin-right: 10px;
-    }
+/* 2. Main Dashboard Layout (Sidebar + Content) */
+.dashboard-container {
+    display: flex; /* Key for horizontal layout */
+    min-height: 100vh;
+    background-color: #fafafa; /* Light background for the content area */
+}
 
-    .main {
-      margin-left: 250px;
-      padding: 40px;
-      width: calc(100% - 250px);
-    }
+/* 3. Sidebar Styling (The Red Column) */
+.sidebar {
+    width: 250px; /* Fixed width for the sidebar */
+    min-width: 250px; 
+    background-color: #d32f2f; /* Dark Red Theme */
+    color: white;
+    padding: 20px;
+}
 
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px 0;
+    margin: 5px 0;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.sidebar a:hover, .sidebar .active {
+    background-color: #b71c1c; /* Slightly darker red on hover/active */
+}
+
+/* 4. Main Content Area */
+.main-content {
+    flex-grow: 1; /* Takes up the remaining space */
+    padding: 30px 40px;
+}
+
+/* 5. Header Bar (for the "Welcome back, Learner!" bar) */
+.user-header {
+    background-color: #fff;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-icon {
+    background: #d32f2f; /* Red profile icon */
+}
+
+    /* ============================
+       Forum Section
+    ============================ */
     .forum-container {
-      max-width: 900px;
-      margin: auto;
       background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 25px 30px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
     .forum-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .forum-header h2 {
-      color: #333;
+      font-size: 1.6rem;
+      color: #222;
     }
 
     .btn-new {
       background: #d32f2f;
       color: white;
-      padding: 10px 18px;
       border: none;
+      padding: 10px 18px;
       border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 500;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     .btn-new:hover {
       background: #b71c1c;
     }
 
+    /* ============================
+       Post Cards
+    ============================ */
     .post {
-      border-bottom: 1px solid #ddd;
-      padding: 20px 0;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      background: #fff;
+      transition: box-shadow 0.3s ease;
     }
 
-    .post:last-child {
-      border-bottom: none;
+    .post:hover {
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
 
     .post-title {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 600;
+      margin-bottom: 8px;
       color: #d32f2f;
-      margin-bottom: 5px;
     }
 
     .post-meta {
-      font-size: 0.9rem;
-      color: #666;
-      margin-bottom: 10px;
+      font-size: 0.85rem;
+      color: #777;
+      margin-bottom: 12px;
     }
 
     .post-content {
+      font-size: 0.95rem;
+      line-height: 1.6;
       color: #444;
-      line-height: 1.5;
+      margin-bottom: 15px;
     }
 
-    .create-post {
-      margin-top: 40px;
+    /* ============================
+       Replies
+    ============================ */
+    .post-replies {
+      background: #fafafa;
+      border-left: 3px solid #d32f2f;
+      padding: 10px 15px;
+      border-radius: 6px;
+      margin-bottom: 10px;
     }
 
-    .create-post textarea {
-      width: 100%;
-      height: 100px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      resize: vertical;
-      font-size: 1rem;
+    .reply-item {
+      margin-bottom: 10px;
+      padding: 8px 0;
+      border-bottom: 1px dashed #ddd;
     }
 
-    .btn-post {
+    .reply-item:last-child {
+      border-bottom: none;
+    }
+
+    .reply-meta {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    /* ============================
+       Reply Form
+    ============================ */
+    .btn-reply-toggle {
+      background: none;
+      border: 1px solid #d32f2f;
+      color: #d32f2f;
+      border-radius: 5px;
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-reply-toggle:hover {
+      background: #d32f2f;
+      color: white;
+    }
+
+    .reply-form-container {
+      display: none;
       margin-top: 10px;
-      padding: 10px 20px;
+    }
+
+    .reply-form-container.open {
+      display: block;
+    }
+
+    .reply-form-container textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      resize: vertical;
+      min-height: 80px;
+      font-family: inherit;
+      margin-bottom: 10px;
+    }
+
+    .btn-reply-submit {
       background: #d32f2f;
       color: white;
       border: none;
-      border-radius: 6px;
+      padding: 8px 14px;
+      border-radius: 5px;
+      font-size: 0.9rem;
       cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn-reply-submit:hover {
+      background: #b71c1c;
+    }
+
+    /* ============================
+       Drawer for New Post
+    ============================ */
+    .post-drawer {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 380px;
+      height: 100%;
+      background: #fff;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.15);
+      padding: 25px;
+      transition: right 0.4s ease;
+      z-index: 1000;
+    }
+
+    .post-drawer.open {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    .drawer-header h3 {
+      margin: 0;
+      color: #d32f2f;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .drawer-form input,
+    .drawer-form textarea {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-family: inherit;
+    }
+
+    .drawer-form textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-post {
+      background: #d32f2f;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     .btn-post:hover {
       background: #b71c1c;
     }
-
-  </style>
+    </style>
 </head>
+
 <body>
+<div class="dashboard-container">
+    <%- include("../partials/userSidebar") %>
 
-  <!-- Sidebar include -->
-  <%- include("../partials/userSidebar") %>
+    <div class="main-content">
+        <header class="user-header">
+            <h1>Welcome back, Learner!</h1>
+            <div class="profile">
+                <span class="profile-icon">U</span> Learner User
+            </div>
+        </header>
 
-  <div class="main">
-    <div class="forum-container">
-      <div class="forum-header">
-        <h2>Community Forum</h2>
-        <button class="btn-new" onclick="document.getElementById('post-section').scrollIntoView();">+ New Post</button>
-      </div>
+        <div class="forum-container">
+            <div class="forum-header">
+                <h2>Community Forum</h2>
+                <button class="btn-new" onclick="openPostDrawer()">+ New Post</button>
+            </div>
 
-      <!-- Sample Posts -->
-      <div class="post">
-        <div class="post-title">Any tips for managing focus in class?</div>
-        <div class="post-meta">Posted by <strong>abc</strong> · 2 hours ago</div>
-        <div class="post-content">
-          I have ADHD and struggle with staying focused during lessons. What strategies help you stay on track?
+            <% if (posts && posts.length > 0) { %>
+                <% posts.forEach(post => { %>
+                    <div class="post" id="post-<%= post._id %>">
+                        <div class="post-title"><%= post.title %></div>
+
+                                <div class="post-meta">
+                                    <!--Add check for null postedBy before accessing properties -->
+                                    <% if (post.postedBy) { %>
+                                        Posted by <strong><%= post.postedBy.firstName %> <%= post.postedBy.lastName %></strong>
+                                    <% } else { %>
+                                        Posted by <strong>Learner User</strong>
+                                    <% } %>
+                                    · <%= new Date(post.createdAt).toLocaleDateString() %>
+                                </div>
+
+                                <div class="post-content"><%= post.content %></div>
+
+
+
+                        <div class="post-replies">
+                            <strong>Replies (<%= post.replies.length %>):</strong>
+                                                      <% post.replies.forEach(reply => { %>
+                              <div class="reply-item">
+                                  <div class="reply-meta">
+                                      <!--Add check for null reply.userId before accessing properties -->
+                                      <% if (reply.userId) { %>
+                                          By <strong><%= reply.userId.firstName %> <%= reply.userId.lastName %></strong>
+                                      <% } else { %>
+                                          By <strong>Learner User</strong>
+                                      <% } %>
+                                      on <%= new Date(reply.createdAt).toLocaleDateString() %>
+                                  </div>
+                                  <%= reply.text %>
+                              </div>
+                          <% }) %>
+
+                        </div>
+
+                        <button class="btn-reply-toggle" onclick="toggleReplyForm('<%= post._id %>')">Add Reply</button>
+
+                        <div class="reply-form-container" id="reply-form-<%= post._id %>">
+                            <form action="/user/community/reply/<%= post._id %>" method="POST">
+                                <textarea name="replyText" placeholder="Write your reply..." required></textarea>
+                                <button type="submit" class="btn-reply-submit">Submit Reply</button>
+                            </form>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p>No community posts found. Be the first to start a discussion!</p>
+            <% } %>
         </div>
-      </div>
-
-      <div class="post">
-        <div class="post-title">Best visual learning tools?</div>
-        <div class="post-meta">Posted by <strong>learner123</strong> · Yesterday</div>
-        <div class="post-content">
-          Can anyone suggest great visual tools for dyslexic students? Looking for free apps or browser tools.
-        </div>
-      </div>
-
-      <!-- Create Post -->
-      <div class="create-post" id="post-section">
-        <h3>Create a New Post</h3>
-        <textarea placeholder="Share your thoughts or ask a question..."></textarea>
-        <button class="btn-post" onclick="postMessage()">Post</button>
-      </div>
     </div>
-  </div>
 
-  <script>
-    function postMessage() {
-      alert("Your post has been submitted (This is just a UI demo).");
-      // You could extend this to send data to a backend
-    }
-  </script>
+    <!-- Drawer for creating a new post -->
+<div class="post-drawer" id="post-drawer">
+    <div class="drawer-header">
+        <h3>Create a New Post</h3>
+        <button class="close-btn" onclick="closePostDrawer()">×</button>
+    </div>
+
+    <!-- FIX: Changed action to include the /user prefix for the form submission -->
+    <form class="drawer-form" action="/user/community/post" method="POST">
+        <input type="text" name="title" placeholder="Enter post title" required>
+        <textarea name="content" placeholder="Share your thoughts or ask a question..." required></textarea>
+        <button type="submit" class="btn-post">Submit Post</button>
+    </form>
+</div>
+
+</div>
+
+<script>
+function openPostDrawer() {
+    document.getElementById('post-drawer').classList.add('open');
+}
+function closePostDrawer() {
+    document.getElementById('post-drawer').classList.remove('open');
+}
+function toggleReplyForm(postId) {
+    const formContainer = document.getElementById(`reply-form-${postId}`);
+    formContainer.classList.toggle('open');
+}
+</script>
 
 </body>
 </html>

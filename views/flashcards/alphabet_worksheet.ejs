@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pattern Alphabet Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(173, 216, 230, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 255, 224, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            min-height: 100vh;
+            overflow-x: auto;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 50px;
+            box-shadow: 
+                0 0 0 10px rgba(255, 255, 255, 0.5),
+                0 0 0 20px rgba(255, 255, 255, 0.2),
+                0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #3498db, #9b59b6, #e74c3c);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .alphabet-pattern {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            perspective: 1000px;
+        }
+
+        .letter-tile {
+            position: relative;
+            aspect-ratio: 1;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+
+        .letter-tile:hover {
+            transform: rotateY(180deg) scale(1.05);
+        }
+
+        .tile-front,
+        .tile-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backface-visibility: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 3px solid;
+        }
+
+        .tile-front {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-color: #dee2e6;
+        }
+
+        .tile-back {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            border-color: #3a8b7f;
+            transform: rotateY(180deg);
+            color: white;
+        }
+
+        .letter-display {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tile-back .letter-display {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .word-display {
+            font-size: 0.9em;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .emoji-display {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        /* Unique pattern colors for each row */
+        .letter-tile:nth-child(6n+1) .tile-front { border-color: #e74c3c; background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); }
+        .letter-tile:nth-child(6n+2) .tile-front { border-color: #f39c12; background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); }
+        .letter-tile:nth-child(6n+3) .tile-front { border-color: #27ae60; background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%); }
+        .letter-tile:nth-child(6n+4) .tile-front { border-color: #3498db; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); }
+        .letter-tile:nth-child(6n+5) .tile-front { border-color: #9b59b6; background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); }
+        .letter-tile:nth-child(6n+6) .tile-front { border-color: #e67e22; background: linear-gradient(135deg, #fbe9e7 0%, #ffab91 100%); }
+
+        .practice-area {
+            background: white;
+            padding: 25px;
+            border-radius: 30px;
+            box-shadow: 
+                inset 0 0 0 5px rgba(52, 152, 219, 0.1),
+                0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .practice-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .letter-input {
+            width: 80px;
+            height: 80px;
+            border: 4px dashed #bdc3c7;
+            border-radius: 50%;
+            font-size: 2.5em;
+            text-align: center;
+            background: #ffffff;
+            color: #2c3e50;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .letter-input:focus {
+            outline: none;
+            border-color: #3498db;
+            border-style: solid;
+            box-shadow: 
+                inset 0 2px 8px rgba(0, 0, 0, 0.1),
+                0 0 20px rgba(52, 152, 219, 0.3);
+            transform: scale(1.1);
+        }
+
+        .check-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+        }
+
+        .feedback {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feedback.correct {
+            background: linear-gradient(135deg, #d5f4e6 0%, #b8e6d0 100%);
+            color: #27ae60;
+            border: 2px solid #27ae60;
+        }
+
+        .feedback.incorrect {
+            background: linear-gradient(135deg, #ffeaea 0%, #ffb3b3 100%);
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+        }
+
+        .current-letter {
+            font-size: 1.8em;
+            color: #3498db;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .score-board {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .score-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .score-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .score-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .alphabet-pattern {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+            
+            .letter-display {
+                font-size: 2em;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .alphabet-pattern {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .letter-input {
+                width: 60px;
+                height: 60px;
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌈 Flip & Learn Alphabet 🌈</h1>
+            <p>Hover over letters to see words!</p>
+        </div>
+
+        <div class="alphabet-pattern" id="alphabetGrid">
+            <!-- Letters will be generated here -->
+        </div>
+
+        <div class="practice-area">
+            <div class="practice-title">
+                Practice Time! 
+                <span class="current-letter" id="currentLetter">Click a letter above</span>
+            </div>
+            <div class="input-container">
+                <input type="text" class="letter-input" id="letterInput" maxlength="1" placeholder="?">
+                <button class="check-btn" onclick="checkAnswer()">✓ Check</button>
+            </div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <div class="score-board">
+            <div class="score-item">
+                <div class="score-number" id="correctScore">0</div>
+                <div class="score-label">Correct</div>
+            </div>
+            <div class="score-item">
+                <div class="score-number" id="totalScore">0</div>
+                <div class="score-label">Total</div>
+            </div>
+            <div class="score-item">
+                <div class="score-number" id="percentScore">0%</div>
+                <div class="score-label">Success</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const letters = [
+            {letter: 'A', word: 'Apple', emoji: '🍎'},
+            {letter: 'B', word: 'Balloon', emoji: '🎈'},
+            {letter: 'C', word: 'Cat', emoji: '🐱'},
+            {letter: 'D', word: 'Duck', emoji: '🦆'},
+            {letter: 'E', word: 'Egg', emoji: '🥚'},
+            {letter: 'F', word: 'Flower', emoji: '🌸'},
+            {letter: 'G', word: 'Gift', emoji: '🎁'},
+            {letter: 'H', word: 'Heart', emoji: '❤️'},
+            {letter: 'I', word: 'Ice', emoji: '🧊'},
+            {letter: 'J', word: 'Juice', emoji: '🧃'},
+            {letter: 'K', word: 'Key', emoji: '🔑'},
+            {letter: 'L', word: 'Leaf', emoji: '🍃'},
+            {letter: 'M', word: 'Music', emoji: '🎵'},
+            {letter: 'N', word: 'Night', emoji: '🌙'},
+            {letter: 'O', word: 'Ocean', emoji: '🌊'},
+            {letter: 'P', word: 'Pizza', emoji: '🍕'},
+            {letter: 'Q', word: 'Queen', emoji: '👸'},
+            {letter: 'R', word: 'Robot', emoji: '🤖'},
+            {letter: 'S', word: 'Star', emoji: '⭐'},
+            {letter: 'T', word: 'Tiger', emoji: '🐅'},
+            {letter: 'U', word: 'Unicorn', emoji: '🦄'},
+            {letter: 'V', word: 'Victory', emoji: '🏆'},
+            {letter: 'W', word: 'Wave', emoji: '👋'},
+            {letter: 'X', word: 'X-ray', emoji: '🩻'},
+            {letter: 'Y', word: 'Yarn', emoji: '🧶'},
+            {letter: 'Z', word: 'Zebra', emoji: '🦓'}
+        ];
+
+        let selectedLetter = null;
+        let correctCount = 0;
+        let totalCount = 0;
+
+        function createAlphabet() {
+            const grid = document.getElementById('alphabetGrid');
+            
+            letters.forEach(item => {
+                const tile = document.createElement('div');
+                tile.className = 'letter-tile';
+                tile.onclick = () => selectLetter(item);
+                
+                tile.innerHTML = `
+                    <div class="tile-front">
+                        <div class="letter-display">${item.letter}</div>
+                    </div>
+                    <div class="tile-back">
+                        <div class="emoji-display">${item.emoji}</div>
+                        <div class="letter-display">${item.letter}</div>
+                        <div class="word-display">${item.word}</div>
+                    </div>
+                `;
+                
+                grid.appendChild(tile);
+            });
+        }
+
+        function selectLetter(letterData) {
+            selectedLetter = letterData;
+            document.getElementById('currentLetter').textContent = `Write: ${letterData.letter}`;
+            document.getElementById('letterInput').focus();
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').className = 'feedback';
+            
+            // Clear input
+            document.getElementById('letterInput').value = '';
+        }
+
+        function checkAnswer() {
+            if (!selectedLetter) {
+                alert('Please click on a letter first!');
+                return;
+            }
+
+            const input = document.getElementById('letterInput').value.toUpperCase();
+            const feedback = document.getElementById('feedback');
+            totalCount++;
+
+            if (input === selectedLetter.letter) {
+                correctCount++;
+                feedback.textContent = `🎉 Correct! ${selectedLetter.letter} for ${selectedLetter.word}`;
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = `Try again! The answer is ${selectedLetter.letter}`;
+                feedback.className = 'feedback incorrect';
+            }
+
+            updateScores();
+            
+            // Clear input after delay
+            setTimeout(() => {
+                document.getElementById('letterInput').value = '';
+            }, 1500);
+        }
+
+        function updateScores() {
+            document.getElementById('correctScore').textContent = correctCount;
+            document.getElementById('totalScore').textContent = totalCount;
+            
+            const percentage = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+            document.getElementById('percentScore').textContent = percentage + '%';
+        }
+
+        // Handle Enter key
+        document.getElementById('letterInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Auto uppercase
+        document.getElementById('letterInput').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createAlphabet();
+        });
+    </script>
+</body>
+</html>

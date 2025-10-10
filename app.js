@@ -1,3 +1,4 @@
+//app.js
 const express = require("express");
 const path = require("path");
 const fileUpload = require("express-fileupload");
@@ -10,6 +11,22 @@ const session = require("express-session");
 
 // Load DB config
 const connectToDatabase = require("./dbConfig");
+connectToDatabase()
+  .then(() => {
+    console.log("MongoDB connection successful. Starting server...");
+    
+    // START SERVER ONLY AFTER DB CONNECTS
+    app.listen(PORT, () => {
+      console.log(`Server running at http://localhost:${PORT}`);
+    });
+
+  })
+  .catch((err) => {
+    // If connection fails, log and exit
+    console.error("FATAL: Failed to start server due to MongoDB connection error:", err.message);
+    process.exit(1);
+  });
+
 
 // Import models
 const { Admin } = require("./models/adminModel");
@@ -29,7 +46,7 @@ app.set("views", path.join(__dirname, "views"));
 // Middleware
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
-app.use(fileUpload());
+//app.use(fileUpload());
 app.use('/css', express.static(__dirname + '/public/css'));
 
 // Ensure uploads directory exists
@@ -53,7 +70,11 @@ app.use("/user", require("./routes/userRoute"));
 const authRoutes = require("./routes/authRoute");
 app.use("/auth", authRoutes);
 
+const flashCards = require('./routes/flashCards');
+app.use('/flashcards', flashCards);
 
+const games = require('./routes/games');
+app.use('/games', games);
 
 //Redirecting to index page
 app.get("/", async (req, res) => {
@@ -71,12 +92,7 @@ app.use((err, req, res, next) => {
 });
 
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
-
-app.use((err, req, res, next) => {
+/*app.use((err, req, res, next) => {
   console.error("Error stack:", err.stack);
   res.status(500).send("Something broke! Check the console for error details.");
-});
+});*/

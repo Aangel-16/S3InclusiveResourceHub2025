@@ -6,10 +6,14 @@ const resourceSchema = new mongoose.Schema({
   title: { type: String, required: true, trim: true },
   description: { type: String, default: "" },
   type: { type: String, enum: ["pdf", "video", "link", "image"], required: true },
-  url: { type: String, required: true },
+  url: { type: String, required: false },
   tags: [{ type: String }],
   uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  category: { type: String, required: true },
+  category: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Category", 
+        required: true 
+    },
   approved: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });

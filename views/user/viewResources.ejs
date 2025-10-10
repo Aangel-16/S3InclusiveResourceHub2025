@@ -13,147 +13,128 @@
   <!-- Sidebar -->
   <%- include("../partials/userSidebar") %>
   
-  <!-- Main Content -->
   <div class="main-content">
-    <header>
-       <!-- Top Bar -->
-      <div class="top-bar">
-        <div class="welcome-text">Welcome back, User!</div>
-        <div class="user-profile">
-          <div class="profile-pic">A</div>
-          <span>User</span>
+        <header>
+            <div class="top-bar">
+                <div class="welcome-text">Welcome back, User!</div>
+                <div class="user-profile">
+                    <div class="profile-pic">A</div>
+                    <span>User</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="resource-toolbar">
+            <div class="toolbar-header"><h2>Resource Library</h2></div>
+            <div class="search-box">
+                <input type="text" placeholder="Search resources...">
+            </div>
+            <div class="actions">
+                <a href="#" class="btn">Filter</a>
+            </div>
         </div>
-      </div>
-    </header>
 
-    <div class="resource-toolbar">
-    <div class="toolbar-header">
-      <h2>Resource Library</h2>
-      </div>
-      <div class="search-box">
-        <input type="text" placeholder="Search resources...">
-      </div>
+        <div class="content-section">
+            <h3>Browse Resources by Category</h3>
+
+            <% if (staticResources && staticResources.length > 0) { %>
+                <section class="resource-category">
+                    <h4>Static HTML Interactives</h4> 
+                    <div class="resource-grid">
+                        <% staticResources.forEach(resource => { %>
+                            <div class="resource-card">
+                                <h5><%= resource.title %></h5> 
+                                <p><%= resource.description || 'No description provided.' %></p>
+
+                                <div class="card-actions">
+                                    <a href="/flashcards/<%= resource.slug %>" class="btn" target="_blank">Launch Interactive</a>
+                                </div>
+
+                                <p class="updated-info">
+                                    Type: <%= resource.type %> | Static Content
+                                </p>
+                            </div>
+                        <% }) %>
+                    </div>
+                </section>
+            <% } %>
+
+            <% if (staticGames && staticGames.length > 0) { %>
+                <section class="resource-category">
+                    <h4>Static HTML Games</h4> 
+                    <div class="resource-grid">
+                        <% staticGames.forEach(game => { %>
+                            <div class="resource-card">
+                                <h5><%= game.title %></h5> 
+                                <p><%= game.description || 'No description provided.' %></p>
+
+                                <div class="card-actions">
+                                    <a href="/games/<%= game.slug %>" class="btn" target="_blank">Play Game</a>
+                                </div>
+
+                                <p class="updated-info">
+                                    Type: <%= game.type %> | Static Content
+                                </p>
+                            </div>
+                        <% }) %>
+                    </div>
+                </section>
+            <% } %>
+            <% 
+                const dbResourcesExist = Object.keys(dbGroupedResources || {}).length > 0;
+            %>
+            
+            <% if (dbResourcesExist) { %>
+                <% for (const categoryName in dbGroupedResources) { %>
+                    <% if (dbGroupedResources.hasOwnProperty(categoryName)) { %>
+                        <section class="resource-category">
+                            <h4><%= categoryName %></h4> 
+                            <div class="resource-grid">
+                                <% dbGroupedResources[categoryName].forEach(resource => { %>
+                                    <div class="resource-card">
+                                        <h5><%= resource.title %></h5> 
+                                        <p><%= resource.description || 'No description provided.' %></p>
+
+                                        <div class="card-actions">
+                                          <% 
+                                              let viewUrl = '#';
+                                              
+                                              // Determine the "View" URL for external links/videos/files
+                                              if (resource.type === 'link' || (resource.type === 'video' && resource.url && resource.url.startsWith('http'))) {
+                                                  // External URL (like YouTube, Google Drive, etc.)
+                                                  viewUrl = resource.url;
+                                              } else if (resource.url) {
+                                                  // Internal file URL, route through resource view page
+                                                  viewUrl = '/resource/view/' + resource._id;
+                                              }
+                                          %>
+
+                                          <!-- View Resource Button -->
+                                          <a href="<%= viewUrl %>" target="_blank" class="btn">View</a>
+
+                                          <!-- Download Resource Button -->
+                                          <a href="/resource/download/<%= resource._id %>" class="btn">Download</a>
+                                      </div>
 
 
-    <div class="content-section">
-      <h3>Browse Resources by Category</h3>
+                                        <p class="updated-info">
+                                            Type: <%= resource.type %>
+                                            <% if (resource.createdAt) { %> | Uploaded <%= new Date(resource.createdAt).toLocaleDateString() %>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                    
+                                <% }) %>
+                            </div>
+                        </section>
+                    <% } %>
+                <% } %>
+            <% } %>
 
-      <!-- Flashcards -->
-      <section class="resource-category">
-        <h4>Flashcards</h4>
-        <div class="resource-grid">
-
-          <div class="resource-card">
-            <h5>Alphabet Flashcards</h5>
-            <p>Colorful flashcards for A–Z learning.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-
-          <div class="resource-card">
-            <h5>Numbers Flashcards</h5>
-            <p>Flashcards for counting 1–20.</p>
-           <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
+            <% if ((!staticResources || staticResources.length === 0) && (!staticGames || staticGames.length === 0) && !dbResourcesExist) { %>
+                <p>No resources found. Use the "Upload Resource" button to add one.</p>
+            <% } %>
         </div>
-      </section>
 
-      <!-- Worksheets -->
-      <section class="resource-category">
-        <h4>Worksheets</h4>
-        <div class="resource-grid">
-
-          <div class="resource-card">
-            <h5>Math Worksheet</h5>
-            <p>Practice addition and subtraction.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-
-          <div class="resource-card">
-            <h5>Grammar Worksheet</h5>
-            <p>Simple exercises on nouns and verbs.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Stories -->
-      <section class="resource-category">
-        <h4>Stories</h4>
-        <div class="resource-grid">
-
-          <div class="resource-card">
-            <h5>The Clever Rabbit</h5>
-            <p>A short moral story for kids.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-
-          <div class="resource-card">
-            <h5>The Brave Little Turtle</h5>
-            <p>Inspirational children’s story.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Poems -->
-      <section class="resource-category">
-        <h4>Poems</h4>
-        <div class="resource-grid">
-
-          <div class="resource-card">
-            <h5>Twinkle Twinkle</h5>
-            <p>A classic nursery rhyme.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-
-          <div class="resource-card">
-            <h5>Rain Rain Go Away</h5>
-            <p>Popular children’s poem.</p>
-            <div class="card-actions">
-              <a href="#" class="btn">View</a>
-              <a href="#" class="btn edit">Edit Details</a>
-              <a href="#" class="btn delete">Delete</a>
-            </div>
-            <p class="updated-info">Updated 5 days ago</p>
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
 </body>
 </html>
