@@ -679,42 +679,88 @@
   }
 }
 
+/* ======================================= */
+/* Resource Card Style - Red Top / White Bottom */
+/* ======================================= */
+
 .resource-category .resource-card {
-  background: #fff;
-  border: 2px solid #d73527;
+  /* ... (styles remain the same) ... */
+  background: none;
+  border: none;
   border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden; 
+  padding: 0; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
   text-align: left;
   transition: all 0.3s ease;
 }
 
 .resource-category .resource-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 18px rgba(215, 53, 39, 0.25);
+  box-shadow: 0 8px 20px rgba(63, 7, 1, 0.662);
 }
 
-/* Card title */
-.resource-category .resource-card h5 {
+/* --- Card Top (Red Section) --- */
+.resource-category .resource-card .card-top {
+  background: linear-gradient(
+    to bottom right, 
+     /*#ff7e5f, #feb47b,#8a8484,#eb8c74*/
+     #88b366
+
+         /* Fades to a slightly darker, rich red */
+  ); 
+  
+  min-height: 120px; 
+  display: flex;
+  align-items: flex-end; /* Align content to the bottom of the red box */
+  justify-content: center; 
+  padding: 20px; 
+  position: relative; 
+}
+
+/* Container for text inside the red box */
+.resource-category .resource-card .card-top .top-content {
+    width: 100%; /* Ensure text uses full width */
+}
+
+/* Card title - NOW inside .card-top (RED) - must be WHITE */
+.resource-category .resource-card .card-top h5 {
   font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  color: #222;
+  font-weight: 700; 
+  margin-bottom: 5px;
+  color: #fff; /* Title text color is white */
+  margin-top: 0; 
 }
 
-/* Card description */
-.resource-category .resource-card p {
+/* Card description - NOW inside .card-top (RED) - must be WHITE */
+.resource-category .resource-card .card-top p {
   font-size: 14px;
-  color: #555;
-  margin-bottom: 15px;
+  color: #f0f0f0; /* Description text color is light white */
+  margin-bottom: 0; /* Remove bottom margin here, since actions are in the next section */
 }
 
-/* Card actions */
+/* --- Card Bottom (White Section) --- */
+.resource-category .resource-card .card-bottom {
+  background-color: #fff; /* White background */
+  padding: 15px 20px 20px 20px; /* Padding for the content */
+  min-height: 100px; 
+}
+
+/* Card actions and updated info remain inside .card-bottom (WHITE) and use their original colors */
+
 .resource-category .resource-card .card-actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
+
+.resource-category .resource-card .updated-info {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #777;
+  font-style: italic;
+}
+/* ... rest of your action button styles remain the same ... */
 
 /* Buttons inside resource card */
 .resource-category .resource-card .btn {
@@ -741,13 +787,13 @@
   background: #333;
 }
 
-/* Updated info text */
+/* Updated info text 
 .resource-category .resource-card .updated-info {
   margin-top: 10px;
   font-size: 12px;
   color: #777;
   font-style: italic;
-}
+}*/
 
 
 /* ================= LIST EDUCATORS PAGE ================= */
@@ -851,8 +897,8 @@
 
 /* Page specific wrapper */
 .categories-page {
-  min-height: 100vh;
-  background: #f5f5f5;
+  min-height: 100%;
+  background: #f1ecec;
   padding-bottom: 40px;
 }
 
@@ -971,6 +1017,74 @@
 .category-card .btn.delete:hover {
   background: #333;
 }
+
+/* Category Grid */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Category Card */
+.category-card {
+  background: hsl(0, 0%, 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Card Display */
+.category-card .card-display {
+  padding: 20px;
+  text-align: center;
+}
+
+.category-card h4 {
+  margin-bottom: 10px;
+  color: #d64545; /* title color like resource cards */
+  font-size: 18px;
+}
+
+.category-card .description-preview {
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+/* Card Buttons */
+.category-card .card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.category-card .btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  background-color: #ff7e5f;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.category-card .btn:hover {
+  background-color: #e06b4a;
+}
+
+
 
 /* ==================== CATEGORY TOOLBAR (match Resource/ Educators style) ==================== */
 .categories-page .category-toolbar {

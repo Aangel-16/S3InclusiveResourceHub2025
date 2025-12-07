@@ -1,0 +1,248 @@
+<!-- userReview.ejs-->
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Reviews</title>
+  <link rel="stylesheet" href="/css/userStyle.css" />
+  <style>
+    /* Global/Layout Styles inferred from image */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4; /* Light background for the main area */
+    }
+
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* --- Sidebar Styles (Inferred from image) --- */
+    /* Assuming userSidebar partial has a container with class 'sidebar' or similar */
+    .sidebar {
+      width: 280px; /* Width based on the image */
+      background-color: #d73527; /* Deep red color */
+      color: white;
+      padding: 0;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-section {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo-icon {
+      width: 60px;
+      height: 60px;
+      background-color: white;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* Add a placeholder style for the colorful logo inside the white circle */
+      background-image: url('placeholder-logo.png'); /* Replace with actual logo if needed */
+      background-size: cover;
+    }
+
+    .logo-text h3 {
+      margin: 0;
+      font-size: 1.5em;
+      font-weight: 600;
+    }
+
+    .logo-text p {
+      margin: 5px 0 0 0;
+      font-size: 0.9em;
+      font-weight: 300;
+    }
+
+    .sidebar-nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .sidebar-nav li a {
+      display: block;
+      padding: 15px 30px;
+      text-decoration: none;
+      color: white;
+      font-size: 1.1em;
+      transition: background-color 0.2s;
+    }
+
+    /* Highlighted link style (e.g., current page 'Dashboard' in image) */
+    .sidebar-nav li a.active,
+    .sidebar-nav li a:hover {
+      background-color: #a32219; /* Darker red for active/hover state */
+    }
+
+    /* Styling for the specific active item based on the image (Dashboard) */
+    .sidebar-nav li:nth-child(1) a { /* Assuming Dashboard is the first link */
+        background-color: white;
+        color: #d73527;
+    }
+
+    /* --- Main Content Styles (Inferred from image) --- */
+    .main-content {
+      flex-grow: 1;
+      padding: 0 40px; /* Padding for the main area content */
+    }
+
+    header {
+      padding-top: 20px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .welcome-text {
+      font-size: 1.2em;
+      font-weight: 600;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      font-size: 1em;
+      color: #333;
+    }
+
+    .profile-pic {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #d73527; /* Red background for initial 'A' */
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 10px;
+      font-size: 0.9em;
+    }
+
+    .content-section {
+      padding-top: 20px;
+    }
+
+    /* Review Form & List Styles */
+    .review-form h3, .reviews-list h3 {
+      margin-top: 0;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .review-card {
+      border: 1px solid #ccc;
+      border-radius: 5px; /* Slightly tighter border radius for a modern look */
+      padding: 15px;
+      margin-bottom: 15px;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Soft shadow */
+    }
+    .review-card h5 {
+      margin: 0 0 5px 0;
+      font-weight: 700;
+      color: #333;
+    }
+    .review-card p {
+      margin: 5px 0;
+      color: #555;
+    }
+    .review-form textarea {
+      width: calc(100% - 18px); /* Account for padding */
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      min-height: 100px; /* Set a minimum height as seen in the image */
+      box-sizing: border-box;
+      font-family: inherit; /* Inherit font for text consistency */
+    }
+    .review-form button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #d73527; /* Deep red button color */
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s;
+    }
+    .review-form button:hover {
+      background: #b6281d;
+    }
+
+    hr {
+      border: 0;
+      height: 1px;
+      background-color: #ccc;
+      margin: 30px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard-container">
+ <!-- Sidebar include -->
+  <%- include("../partials/userSidebar") %>
+
+  <!-- Main content -->
+  <div class="main">
+  
+    <header class="user-header">
+        <h1>Welcome back, Learner!</h1>
+        <div class="profile" onclick="openProfileDrawer()">
+          <span class="profile-icon" id="profile-initial">U</span>
+          Learner User
+        </div>
+      </header>
+
+<div class="content-section">
+<section class="review-form">
+  <h3>Submit Your Review</h3>
+    <form action="/user/reviews/submit" method="POST"> 
+       <textarea name="text" placeholder="Write your review..." rows="4" required></textarea>
+       <button type="submit">Submit Review</button>
+      </form>
+</section>
+
+    <hr />
+
+    <section class="reviews-list">
+      <h3>All Reviews</h3>
+      <% if (reviews && reviews.length > 0) { %>
+        <% reviews.forEach(review => { %>
+          <div class="review-card">
+            <h5><%= review.user.firstName %> <%= review.user.lastName %></h5>
+            <p><%= review.text %></p>
+            <p style="font-size:12px;color:#777;">Submitted on <%= new Date(review.createdAt).toLocaleString() %></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="review-card">  
+            <h5>Anitha william</h5>
+            <p>Reviews....</p>
+            <p style="font-size:12px;color:#777;">Submitted on 14/10/2025, 1:07:25 pm</p>
+          </div>
+        <% } %>
+    </section>
+
+  </div>
+</div>
+</div>
+</body>
+</html>

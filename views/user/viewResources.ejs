@@ -3,138 +3,345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Resource Library - Inclusive Learning Hub</title>
-  <link rel="stylesheet" href="/css/adminStyle.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/css/adminStyle.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+<style>
+    /* Sidebar Overlay */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: none;
+    }
+    .sidebar-overlay.active {
+      display: block;
+    }
+    .sidebar-content {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 400px;
+      max-width: 100%;
+      height: 100%;
+      background-color: #f7fafc;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+      padding: 20px;
+      overflow-y: auto;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+    }
+    .sidebar-overlay.active .sidebar-content {
+      transform: translateX(0);
+    }
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .sidebar-header button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* Form Styles */
+    .admin-form .form-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .admin-form .form-left,
+    .admin-form .form-right {
+      flex: 1 1 180px;
+    }
+    .admin-form label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .admin-form input,
+    .admin-form select,
+    .admin-form textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .admin-form textarea {
+      resize: vertical;
+    }
+    .admin-form .thumbnail {
+      width: 100%;
+      height: 100px;
+      border: 2px dashed #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #777;
+      margin-bottom: 15px;
+    }
+.resource-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.card-top {
+  background: linear-gradient(135deg, #eb8c74, #d64545);
+  padding: 15px;
+  text-align: center;
+  color: #fff;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-top h5 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.card-top p {
+  margin: 0;
+  font-size: 14px;
+  color: #f8f8f8;
+}
+
+.card-bottom {
+  background: #fff;
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.card-actions .btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: #d73527;
+  transition: all 0.3s ease;
+}
+
+.card-actions .btn:hover {
+  background: #b6281d;
+}
+
+.card-actions .btn.delete {
+  background: #555;
+}
+
+.card-actions .btn.delete:hover {
+  background: #333;
+}
+
+.updated-info {
+  font-size: 12px;
+  color: #777;
+  font-style: italic;
+}
+
+
+  </style>
 </head>
 <body>
-  <!-- Sidebar -->
   <%- include("../partials/userSidebar") %>
-  
+
   <div class="main-content">
-        <header>
-            <div class="top-bar">
-                <div class="welcome-text">Welcome back, User!</div>
-                <div class="user-profile">
-                    <div class="profile-pic">A</div>
-                    <span>User</span>
+    <header>
+      <div class="top-bar">
+        <div class="welcome-text">Welcome back, User!</div>
+        <div class="user-profile">
+          <div class="profile-pic">A</div>
+          <span>Educator</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="resource-toolbar">
+      <div class="toolbar-header"><h2>Resource Library</h2></div>
+      <div class="search-box">
+        <input type="text" placeholder="Search resources..." />
+      </div>
+    </div>
+
+    <div class="content-section">
+      <% if (staticResources && staticResources.length > 0) { %>
+      <section class="resource-category">
+        <h4>Interactive Learning Materials</h4>
+        <div class="resource-grid">
+          <% staticResources.forEach(resource => { %>
+          <div class="resource-card" data-title="<%= resource.title.toLowerCase() %>">
+
+            <div class="card-top">
+              <div class="top-content">
+              <h5><%= resource.title %></h5>
+              <p><%= resource.description || 'No description provided.' %></p>
+              </div>
+            </div>
+
+            <div class="card-bottom">
+            <div class="card-actions">
+              <a href="/flashcards/<%= resource.slug %>" class="btn" target="_blank">Launch Interactive</a>
+            </div>
+            <p class="updated-info">Type: <%= resource.type %> | Static Content</p>
+            </div>
+
+          </div>
+          <% }) %>
+        </div>
+      </section>
+      <% } %>
+
+      
+    <% if (staticGames && staticGames.length > 0) { %>
+    <section class="resource-category">
+    <h4>Fun & Learn</h4>
+    <div class="resource-grid">
+        <% staticGames.forEach(game => { %>
+        <div class="resource-card" data-title="<%= game.title.toLowerCase() %>">
+
+        <div class="card-top">
+            <div class="top-content">
+            <h5><%= game.title %></h5>
+            <p><%= game.description || 'No description provided.' %></p>
+            </div>
+        </div>
+
+        <div class="card-bottom">
+            <div class="card-actions">
+            <a href="/games/<%= game.slug %>" class="btn" target="_blank">Play Game</a>
+            </div>
+            <p class="updated-info">
+            Type: <%= game.type %> | Static Content
+            </p>
+        </div>
+
+        </div>
+        <% }) %>
+    </div>
+    </section>
+    <% } %>
+
+
+      <% const dbResourcesExist = dbGroupedResources && Object.keys(dbGroupedResources).length > 0; %>
+
+        <% if (dbResourcesExist) { %>
+          <% for (const categoryName in dbGroupedResources) { %>
+            <% if (dbGroupedResources.hasOwnProperty(categoryName)) { %>
+              <section class="resource-category">
+                <h4><%= categoryName %></h4>
+                <div class="resource-grid">
+                  <% dbGroupedResources[categoryName].forEach(resource => { %>
+                    <div class="resource-card" data-title="<%= resource.title.toLowerCase() %>">
+
+                      <div class="card-top">
+                        <div class="top-content">
+                          <h5><%= resource.title %></h5>
+                          <p><%= resource.description || 'No description provided.' %></p>
+                        </div>
+                      </div>
+
+                      <div class="card-bottom">
+                       <div class="card-actions">
+                         <!--<% 
+                            let previewLink = "/user/resource/view/" + resource._id;
+                            if (resource.url && ["pdf","image","video"].includes(resource.type)) {
+                              previewLink = "/uploads/" + resource.url;
+                            }
+                          %>
+                          <a href="<%= previewLink %>" target="_blank" class="btn">Preview</a>-->
+
+                          <% 
+                            let viewUrl = '#';
+                            if (resource.type === 'link' || (resource.type === 'video' && resource.url && resource.url.startsWith('http'))) {
+                                viewUrl = resource.url;
+                            } else if (resource.url) {
+                                viewUrl = '/uploads/resources/' + resource.url;
+                            }
+                          %>
+                          <a href="<%= viewUrl %>" target="_blank" class="btn">Pre-View</a>
+
+                          <% if (resource.url) { %>
+                            <a href="/user/resource/download/<%= resource._id %>" class="btn">Download</a>
+                          <% } %>
+                        
+                        </div>
+
+
+                        <p class="updated-info">
+                          Type: <%= resource.type %>
+                          <% if (resource.createdAt) { %> | Uploaded <%= new Date(resource.createdAt).toLocaleDateString() %><% } %>
+                        </p>
+                      </div>
+
+                    </div>
+                  <% }) %>
                 </div>
-            </div>
-        </header>
-
-        <div class="resource-toolbar">
-            <div class="toolbar-header"><h2>Resource Library</h2></div>
-            <div class="search-box">
-                <input type="text" placeholder="Search resources...">
-            </div>
-            <div class="actions">
-                <a href="#" class="btn">Filter</a>
-            </div>
-        </div>
-
-        <div class="content-section">
-            <h3>Browse Resources by Category</h3>
-
-            <% if (staticResources && staticResources.length > 0) { %>
-                <section class="resource-category">
-                    <h4>Static HTML Interactives</h4> 
-                    <div class="resource-grid">
-                        <% staticResources.forEach(resource => { %>
-                            <div class="resource-card">
-                                <h5><%= resource.title %></h5> 
-                                <p><%= resource.description || 'No description provided.' %></p>
-
-                                <div class="card-actions">
-                                    <a href="/flashcards/<%= resource.slug %>" class="btn" target="_blank">Launch Interactive</a>
-                                </div>
-
-                                <p class="updated-info">
-                                    Type: <%= resource.type %> | Static Content
-                                </p>
-                            </div>
-                        <% }) %>
-                    </div>
-                </section>
+              </section>
             <% } %>
-
-            <% if (staticGames && staticGames.length > 0) { %>
-                <section class="resource-category">
-                    <h4>Static HTML Games</h4> 
-                    <div class="resource-grid">
-                        <% staticGames.forEach(game => { %>
-                            <div class="resource-card">
-                                <h5><%= game.title %></h5> 
-                                <p><%= game.description || 'No description provided.' %></p>
-
-                                <div class="card-actions">
-                                    <a href="/games/<%= game.slug %>" class="btn" target="_blank">Play Game</a>
-                                </div>
-
-                                <p class="updated-info">
-                                    Type: <%= game.type %> | Static Content
-                                </p>
-                            </div>
-                        <% }) %>
-                    </div>
-                </section>
-            <% } %>
-            <% 
-                const dbResourcesExist = Object.keys(dbGroupedResources || {}).length > 0;
-            %>
-            
-            <% if (dbResourcesExist) { %>
-                <% for (const categoryName in dbGroupedResources) { %>
-                    <% if (dbGroupedResources.hasOwnProperty(categoryName)) { %>
-                        <section class="resource-category">
-                            <h4><%= categoryName %></h4> 
-                            <div class="resource-grid">
-                                <% dbGroupedResources[categoryName].forEach(resource => { %>
-                                    <div class="resource-card">
-                                        <h5><%= resource.title %></h5> 
-                                        <p><%= resource.description || 'No description provided.' %></p>
-
-                                        <div class="card-actions">
-                                          <% 
-                                              let viewUrl = '#';
-                                              
-                                              // Determine the "View" URL for external links/videos/files
-                                              if (resource.type === 'link' || (resource.type === 'video' && resource.url && resource.url.startsWith('http'))) {
-                                                  // External URL (like YouTube, Google Drive, etc.)
-                                                  viewUrl = resource.url;
-                                              } else if (resource.url) {
-                                                  // Internal file URL, route through resource view page
-                                                  viewUrl = '/resource/view/' + resource._id;
-                                              }
-                                          %>
-
-                                          <!-- View Resource Button -->
-                                          <a href="<%= viewUrl %>" target="_blank" class="btn">View</a>
-
-                                          <!-- Download Resource Button -->
-                                          <a href="/resource/download/<%= resource._id %>" class="btn">Download</a>
-                                      </div>
+          <% } %>
+        <% } %>
 
 
-                                        <p class="updated-info">
-                                            Type: <%= resource.type %>
-                                            <% if (resource.createdAt) { %> | Uploaded <%= new Date(resource.createdAt).toLocaleDateString() %>
-                                            <% } %>
-                                        </p>
-                                    </div>
-                                    
-                                <% }) %>
-                            </div>
-                        </section>
-                    <% } %>
-                <% } %>
-            <% } %>
 
-            <% if ((!staticResources || staticResources.length === 0) && (!staticGames || staticGames.length === 0) && !dbResourcesExist) { %>
-                <p>No resources found. Use the "Upload Resource" button to add one.</p>
-            <% } %>
-        </div>
+      <% if ((!staticResources || staticResources.length === 0) && (!staticGames || staticGames.length === 0) && !dbResourcesExist) { %>
+      <p>No resources found. Use the "Upload Resource" button to add one.</p>
+      <% } %>
+    </div>
 
+  <script>
+    // ---------------------- Resource Search ----------------------
+    const searchInput = document.querySelector('.search-box input');
+    searchInput.addEventListener('input', function() {
+      const query = this.value.toLowerCase().trim();
+
+      document.querySelectorAll('.resource-card').forEach(card => {
+        const title = card.dataset.title;
+        const description = card.querySelector('.card-top p')?.textContent.toLowerCase() || '';
+
+        card.style.display = (title.includes(query) || description.includes(query)) ? 'flex' : 'none';
+      });
+
+      // Hide sections with no visible cards
+      document.querySelectorAll('.resource-category').forEach(section => {
+        const visibleCards = section.querySelectorAll('.resource-card:not([style*="display: none"])');
+        section.style.display = visibleCards.length ? 'block' : 'none';
+      });
+    });
+  </script>
 </body>
 </html>

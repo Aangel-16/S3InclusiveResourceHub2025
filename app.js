@@ -5,6 +5,7 @@ const fileUpload = require("express-fileupload");
 const fs = require("fs");
 const mongoose = require("mongoose");
 
+
 // for session handling
 require("dotenv").config();
 const session = require("express-session");
@@ -52,6 +53,11 @@ app.use('/css', express.static(__dirname + '/public/css'));
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, "public/uploads");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
+
+// Middleware
+app.use(express.static(path.join(__dirname, "public"))); 
 
 //session handling
 app.use(

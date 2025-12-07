@@ -14,7 +14,8 @@ const flashcardMap = {
     'emotions': { view: 'flashcards/emotion_flashcards', title: 'Emotion Flashcards' },
     'traffic-light': { view: 'flashcards/traffic_light_flashcard', title: 'Traffic Light Card' },
     'algebra-intro': { view: 'flashcards/algebra', title: 'Fundamental Algebra' },
-    'roman-empire': { view: 'flashcards/roman', title: 'Roman Empire Overview' }
+    'roman-empire': { view: 'flashcards/roman', title: 'Roman Empire Overview' },
+    'letter_learning_tutorial': { view: 'flashcards/letter_learning_tutorial', title: 'Letter Learning Tutorial' }
 };
 
 // Route to handle the dynamic part of the URL (e.g., '/alphabet', '/roman-empire')

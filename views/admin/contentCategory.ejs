@@ -144,10 +144,9 @@
 
     </style>
 </head>
-<body class="categories-page">
+<body>
 
     <%- include("../partials/adminSidebar") %>
-
     <div class="main-content">
         <header>
             <div class="top-bar">
@@ -164,8 +163,9 @@
                 <h2>Content Category</h2>
             </div>
             <div class="search-box">
-                <input type="text" placeholder="Search categories...">
+                <input type="text" id="categorySearchInput" placeholder="Search categories...">
             </div>
+
             <div class="actions">
                 <a href="#" class="btn">Filter</a>
                 <a href="#" id="openAddCategoryBtn" class="btn">+ Add Category</a>
@@ -325,6 +325,26 @@ document.querySelectorAll(".edit-btn").forEach(button => {
                 }
             });
         });
+
+        // --- SEARCH FUNCTIONALITY ---
+        const searchInput = document.getElementById('categorySearchInput');
+        const categoryCards = document.querySelectorAll('.category-card');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+
+            categoryCards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                const description = card.getAttribute('data-description').toLowerCase();
+
+                if (name.includes(query) || description.includes(query)) {
+                    card.style.display = 'flex'; // Show card
+                } else {
+                    card.style.display = 'none'; // Hide card
+                }
+            });
+        });
+
     </script>
 </body>
 </html>

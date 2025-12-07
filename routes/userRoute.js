@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const multer = require("multer");
 
 // Import User model
-const {User, CommunityPost } = require("../models/userModel"); 
+const {User, CommunityPost , Review } = require("../models/userModel"); 
 const { Category, Resource } = require("../models/adminModel");
 
 function getMockUser(req) {
@@ -73,56 +73,50 @@ router.get("/communityHub", async (req, res) => {
 
 // Create a New Post
 router.post("/community/post", async (req, res) => {
-    try {
-        const { title, content } = req.body;
-        const currentUser = getMockUser(req);
-        const postedBy = currentUser._id; // Valid ObjectId string
+  try {
+      const { title, content } = req.body;
 
-        if (!title || !content) {
-            console.warn("Attempt to create a post without title or content.");
-            return res.redirect("/user/communityHub"); 
-        }
+      if (!req.session.user) return res.redirect("/auth/login");
 
-        const newPost = new CommunityPost({ postedBy, title, content });
-        await newPost.save();
+      const postedBy = req.session.user._id;
 
-        // Redirect to view updated posts
-        res.redirect("/user/communityHub");
-    } catch (err) {
-        console.error("Error creating new community post:", err);
-        res.redirect("/user/communityHub"); 
-    }
+      if (!title || !content) {
+          return res.redirect("/user/communityHub"); 
+      }
+
+      const newPost = new CommunityPost({ postedBy, title, content });
+      await newPost.save();
+
+      res.redirect("/user/communityHub");
+  } catch (err) {
+      console.error("Error creating new community post:", err);
+      res.redirect("/user/communityHub"); 
+  }
 });
 
 
 // Add Reply to Post
 router.post("/community/reply/:postId", async (req, res) => {
-    try {
-        const { postId } = req.params;
-        const { replyText } = req.body;
-        const currentUser = getMockUser(req);
-        const userId = currentUser._id; // Valid ObjectId string
+  try {
+      const { postId } = req.params;
+      const { replyText } = req.body;
 
-        if (!replyText) {
-            return res.redirect("/user/communityHub");
-        }
+      if (!req.session.user) return res.redirect("/auth/login");
+      const userId = req.session.user._id;
 
-        const updatedPost = await CommunityPost.findByIdAndUpdate(
-            postId,
-            { $push: { replies: { userId, text: replyText } } },
-            { new: true }
-        );
+      if (!replyText) return res.redirect("/user/communityHub");
 
-        if (!updatedPost) {
-            return res.redirect("/user/communityHub");
-        }
+      await CommunityPost.findByIdAndUpdate(
+          postId,
+          { $push: { replies: { userId, text: replyText } } },
+          { new: true }
+      );
 
-        // Redirect to view updated post
-        res.redirect("/user/communityHub");
-    } catch (err) {
-        console.error("Error submitting reply:", err);
-        res.redirect("/user/communityHub"); 
-    }
+      res.redirect("/user/communityHub");
+  } catch (err) {
+      console.error("Error submitting reply:", err);
+      res.redirect("/user/communityHub"); 
+  }
 });
 
 
@@ -184,7 +178,7 @@ router.get("/viewResources", async (req, res) => {
 });
 
 // Route to View a Specific Resource (e.g., in a detail page or as a preview)
-router.get("/resource/view/:id", async (req, res) => {
+/*router.get("/resource/view/:id", async (req, res) => {
   try {
     const resourceId = req.params.id;
     const resource = await Resource.findById(resourceId);
@@ -193,43 +187,92 @@ router.get("/resource/view/:id", async (req, res) => {
       return res.status(404).send("Resource not found or not approved.");
     }
     
-    // For simplicity, we'll just render a dedicated view page and pass the resource data.
-    // In a real app, 'video' types might use the 'url' as a source, 'pdf' might use an iframe.
     res.render("user/resourceDetail", { resource: resource }); 
     
   } catch (error) {
     console.error("Error viewing resource:", error);
     res.status(500).send("Server Error viewing resource.");
   }
-});
+});*/
 
 
 // Route to Download a Resource
 router.get("/resource/download/:id", async (req, res) => {
   try {
-    const resourceId = req.params.id;
-    const resource = await Resource.findById(resourceId);
+    const resource = await Resource.findById(req.params.id);
 
     if (!resource || !resource.approved) {
       return res.status(404).send("Resource not found or not approved.");
     }
 
-    // Assuming the resource.url stores the unique filename in the /public/uploads directory
-    const filePath = path.join(uploadDir, resource.url);
-    
-    // Check if the file exists on the server
-    if (fs.existsSync(filePath)) {
-      // res.download sends the file as an attachment
-      res.download(filePath, resource.title + path.extname(resource.url)); 
-    } else {
-      res.status(404).send("File not found on server.");
-    }
+    // Correct path to the uploaded resources folder
+    const filePath = path.join(__dirname, "../public/uploads/resources", resource.url);
 
-  } catch (error) {
-    console.error("Error downloading resource:", error);
-    res.status(500).send("Server Error during download.");
+    if (fs.existsSync(filePath)) {
+      return res.download(filePath, resource.title + path.extname(resource.url));
+    } else {
+      console.error(`Download error: File not found at expected path: ${filePath}`);
+      return res.status(404).send("File not found on server.");
+    }
+  } catch (err) {
+    console.error("Error downloading resource:", err);
+    res.status(500).send("Server Error downloading resource");
   }
 });
 
 
+//================================ MANAGE REVIEWS ==================================================
+
+// ------------------- Middleware -------------------
+const requireUser = (req, res, next) => {
+  if (!req.session.user) {
+    console.log("Access denied: User not authenticated.");
+    return res.redirect("/auth/login");
+  }
+  next();
+};
+
+// ------------------- GET Reviews Page -------------------
+// URL: /user/reviews
+router.get("/reviews", requireUser, async (req, res) => {
+  try {
+    const reviews = await Review.find({})
+      .populate("user", "firstName lastName")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.render("user/userReview", { 
+      reviews, 
+      currentUser: req.session.user 
+    });
+  } catch (err) {
+    console.error("Error loading reviews:", err);
+    res.status(500).send("Server Error loading reviews");
+  }
+});
+
+// ------------------- POST Submit Review -------------------
+// URL: /user/reviews/submit
+router.post("/reviews/submit", requireUser, async (req, res) => {
+  try {
+    const currentUser = req.session.user;
+    const text = req.body.text;
+
+    if (!text || text.trim() === "") {
+      console.log("Empty review submission attempted.");
+      return res.redirect("/user/reviews");
+    }
+
+    const newReview = new Review({
+      text,
+      user: currentUser._id
+    });
+
+    await newReview.save();
+    res.redirect("/user/reviews");
+  } catch (err) {
+    console.error("Error submitting review:", err);
+    res.status(500).send("Server Error submitting review");
+  }
+});
 module.exports = router;

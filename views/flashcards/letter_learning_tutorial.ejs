@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Learning Tutorial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #fff9c4 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2e7d32;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #fb8c00;
+            transform: scale(1.05);
+        }
+
+        .theme-toggle {
+            background: #607d8b;
+            color: white;
+        }
+
+        .theme-toggle:hover {
+            background: #546e7a;
+        }
+
+        .blackboard {
+            background: #2d3436;
+            border: 15px solid #8b4513;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .whiteboard {
+            background: #ffffff;
+            border: 15px solid #d4af37;
+        }
+
+        .letter-display {
+            font-size: 10em;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        .blackboard .letter-display {
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .whiteboard .letter-display {
+            color: #2d3436;
+        }
+
+        .letter-info {
+            font-size: 1.5em;
+            margin: 20px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .blackboard .letter-info {
+            color: #ffd700;
+        }
+
+        .whiteboard .letter-info {
+            color: #2e7d32;
+        }
+
+        .trace-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        canvas {
+            border: 3px dashed;
+            border-radius: 10px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .blackboard canvas {
+            background: rgba(255,255,255,0.1);
+            border-color: #ffd700;
+        }
+
+        .whiteboard canvas {
+            background: rgba(0,0,0,0.05);
+            border-color: #4caf50;
+        }
+
+        .progress {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .progress-text {
+            color: #2e7d32;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .instructions {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border-left: 5px solid #ff9800;
+        }
+
+        .instructions h3 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            color: #5d4037;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .letter-display {
+                font-size: 6em;
+            }
+            
+            button {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Learn Your Letters! 📝</h1>
+        
+        <div class="controls">
+            <button class="btn-primary" onclick="nextLetter()">Next Letter ➡️</button>
+            <button class="btn-primary" onclick="previousLetter()">⬅️ Previous</button>
+            <button class="btn-secondary" onclick="playSound()">🔊 Hear Letter</button>
+            <button class="btn-secondary" onclick="clearCanvas()">Clear Drawing</button>
+            <button class="theme-toggle" onclick="toggleTheme()">Switch Board</button>
+        </div>
+
+        <div id="board" class="blackboard">
+            <div class="letter-display" id="letterDisplay">A</div>
+            <div class="letter-info" id="letterInfo">Uppercase A</div>
+            
+            <div class="trace-container">
+                <canvas id="traceCanvas" width="300" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="progress">
+            <div class="progress-text" id="progressText">Letter 1 of 52</div>
+        </div>
+
+        <div class="instructions">
+            <h3>📖 How to Use:</h3>
+            <ul>
+                <li><strong>Click "Hear Letter"</strong> to listen to the letter sound</li>
+                <li><strong>Trace the letter</strong> on the canvas with your mouse or finger</li>
+                <li><strong>Use "Next/Previous"</strong> to move through the alphabet</li>
+                <li><strong>Switch Board</strong> to change between blackboard and whiteboard</li>
+                <li>Take your time - there's no rush! 🌟</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const letters = [
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+        ];
+
+        let currentIndex = 0;
+        let isWhiteBoard = false;
+
+        // Canvas setup
+        const canvas = document.getElementById('traceCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        function setupCanvas() {
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = isWhiteBoard ? '#2e7d32' : '#ffd700';
+        }
+
+        setupCanvas();
+
+        // Drawing functions
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function updateDisplay() {
+            const letter = letters[currentIndex];
+            document.getElementById('letterDisplay').textContent = letter;
+            
+            const isUppercase = letter === letter.toUpperCase();
+            const letterType = isUppercase ? 'Uppercase' : 'Lowercase';
+            document.getElementById('letterInfo').textContent = `${letterType} ${letter.toUpperCase()}`;
+            
+            document.getElementById('progressText').textContent = 
+                `Letter ${currentIndex + 1} of ${letters.length}`;
+            
+            clearCanvas();
+        }
+
+        function nextLetter() {
+            currentIndex = (currentIndex + 1) % letters.length;
+            updateDisplay();
+            playSound();
+        }
+
+        function previousLetter() {
+            currentIndex = (currentIndex - 1 + letters.length) % letters.length;
+            updateDisplay();
+            playSound();
+        }
+
+        function playSound() {
+            const letter = letters[currentIndex].toLowerCase();
+            const utterance = new SpeechSynthesisUtterance(letter);
+            utterance.rate = 0.7;
+            utterance.pitch = 1.2;
+            utterance.volume = 1;
+            speechSynthesis.cancel();
+            speechSynthesis.speak(utterance);
+        }
+
+        function toggleTheme() {
+            isWhiteBoard = !isWhiteBoard;
+            const board = document.getElementById('board');
+            
+            if (isWhiteBoard) {
+                board.classList.remove('blackboard');
+                board.classList.add('whiteboard');
+            } else {
+                board.classList.remove('whiteboard');
+                board.classList.add('blackboard');
+            }
+            
+            setupCanvas();
+            clearCanvas();
+        }
+
+        // Play sound on load
+        window.onload = () => {
+            setTimeout(() => playSound(), 500);
+        };
+    </script>
+</body>
+</html>

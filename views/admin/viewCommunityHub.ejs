@@ -1,14 +1,12 @@
-<!-- community.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Community Forum - Inclusive Learning Hub</title>
+<meta charset="UTF-8">
+<title>Admin – Manage Community Posts</title>
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <link rel="stylesheet" href="/css/userStyle.css" />
-
-    <style>
+<link rel="stylesheet" href="/css/adminStyle.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
     /* ============================
        Base Layout
     ============================ */
@@ -265,109 +263,125 @@
 </head>
 
 <body>
-<div class="dashboard-container">
+<%- include("../partials/adminSidebar") %>
 
-    <%- include("../partials/userSidebar") %>
-
-    <div class="main-content">
-
-        <!-- HEADER COMES FROM SIDEBAR PARTIAL -->
-        <header class="user-header">
-            <h1>Welcome back, Learner!</h1>
-            <div class="profile">
-                <span class="profile-icon">U</span> Learner User
-            </div>
-        </header>
-
-        <div class="forum-container">
-            <div class="forum-header">
-                <h2>Community Forum</h2>
-                <button class="btn-new" onclick="openPostDrawer()">+ New Post</button>
-            </div>
-
-            <% if (posts && posts.length > 0) { %>
-                <% posts.forEach(post => { %>
-                    <div class="post" id="post-<%= post._id %>">
-
-                        <div class="post-title"><%= post.title %></div>
-
-                        <div class="post-meta">
-                            <% if (post.postedBy) { %>
-                                Posted by <strong><%= post.postedBy.firstName %> <%= post.postedBy.lastName %></strong>
-                            <% } else { %>
-                                Posted by <strong>Learner User</strong>
-                            <% } %>
-                            · <%= new Date(post.createdAt).toLocaleDateString() %>
-                        </div>
-
-                        <div class="post-content"><%= post.content %></div>
-
-                        <div class="post-replies">
-                            <strong>Replies (<%= post.replies.length %>)</strong>
-
-                            <% post.replies.forEach(reply => { %>
-                                <div class="reply-item">
-                                    <div class="reply-meta">
-                                        <% if (reply.userId) { %>
-                                            By <strong><%= reply.userId.firstName %> <%= reply.userId.lastName %></strong>
-                                        <% } else { %>
-                                            By <strong>Learner User</strong>
-                                        <% } %>
-                                        on <%= new Date(reply.createdAt).toLocaleDateString() %>
-                                    </div>
-                                    <%= reply.text %>
-                                </div>
-                            <% }) %>
-                        </div>
-
-                        <button class="btn-reply-toggle" onclick="toggleReplyForm('<%= post._id %>')">
-                            Add Reply
-                        </button>
-
-                        <div class="reply-form-container" id="reply-form-<%= post._id %>">
-                            <form action="/user/community/reply/<%= post._id %>" method="POST">
-                                <textarea name="replyText" placeholder="Write your reply..." required></textarea>
-                                <button type="submit" class="btn-reply-submit">Submit Reply</button>
-                            </form>
-                        </div>
-
-                    </div>
-                <% }) %>
-            <% } else { %>
-                <p>No community posts found. Be the first to start a discussion!</p>
-            <% } %>
-        </div>
+<div class="main-content">
+<header>
+    <div class="top-bar">
+        <div class="welcome-text">Welcome, <%= currentUser.firstName %> (Admin)</div>
     </div>
+</header>
 
-    <!-- Drawer -->
-    <div class="post-drawer" id="post-drawer">
-        <div class="drawer-header">
-            <h3>Create a New Post</h3>
-            <button class="close-btn" onclick="closePostDrawer()">×</button>
+<h2><i class="fas fa-users"></i> Community Hub - Manage Posts</h2>
+
+<p>Total Posts: <%= posts.length %></p>
+<p>Total Replies: <%= posts.reduce((acc, p) => acc + p.replies.length, 0) %></p>
+
+<form method="GET" action="/admin/viewCommunityHub" style="margin-bottom:20px;">
+    <input type="text" name="search" value="<%= search %>" placeholder="Search posts..." />
+    <button type="submit" class="btn view-btn">Search</button>
+</form>
+
+<div class="table-container">
+    <% if(posts.length > 0){ %>
+    <table class="post-table">
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Title</th>
+                <th>Created</th>
+                <th>Replies</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% posts.forEach(post => { %>
+            <tr>
+               <!--- <td><%= post.postedBy.firstName %> <%= post.postedBy.lastName %></td>-->
+               <td>
+                <%= post.postedBy ? post.postedBy.firstName + ' ' + post.postedBy.lastName : 'Deleted User' %>
+                </td>
+
+                <td><strong><%= post.title %></strong></td>
+                <td><%= new Date(post.createdAt).toLocaleDateString() %></td>
+                <td><%= post.replies.length %></td>
+                <td>
+                    <button class="btn view-btn"
+                        onclick="openPostModal(JSON.parse(decodeURIComponent('<%= encodeURIComponent(JSON.stringify(post)) %>')))">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+
+                    <form action="/admin/community/<%= post._id %>/delete" method="POST" style="display:inline;">
+                        <button class="btn delete-btn" onclick="return confirm('Delete this post?')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+    <% } else { %>
+        <p style="text-align:center; padding:40px;">No community posts yet.</p>
+    <% } %>
+</div>
+</div>
+
+<!-- Modal -->
+<div id="postModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3 id="postTitle"></h3>
+        <p id="postContent"></p>
+
+        <h4>Replies</h4>
+        <ul id="replyList"></ul>
+
+        <div class="modal-actions">
+            <button class="close-btn" onclick="closePostModal()">Close</button>
         </div>
-
-        <form class="drawer-form" action="/user/community/post" method="POST">
-            <input type="text" name="title" placeholder="Enter post title" required />
-            <textarea name="content" placeholder="Share your thoughts..." required></textarea>
-            <button type="submit" class="btn-post">Submit Post</button>
-        </form>
     </div>
 </div>
 
 <script>
-function openPostDrawer() {
-    document.getElementById('post-drawer').classList.add('open');
+function openPostModal(post){
+    document.getElementById("postTitle").textContent = post.title;
+    document.getElementById("postContent").textContent = post.content;
+
+    let html = "";
+   /* post.replies.forEach(reply => {
+        html += `
+            <li>
+                <strong>${reply.userId.firstName}:</strong> ${reply.text}
+                <form action="/admin/community/${post._id}/reply/${reply._id}/delete" method="POST" style="display:inline;">
+                    <button class="delete-btn" style="margin-left:5px;">Delete</button>
+                </form>
+            </li><hr>`;
+    });*/
+    post.replies.forEach(reply => {
+    html += `
+        <li>
+            <strong>${reply.userId ? reply.userId.firstName : 'Deleted User'}:</strong> ${reply.text}
+            <form action="/admin/community/${post._id}/reply/${reply._id}/delete" method="POST" style="display:inline;">
+                <button class="delete-btn" style="margin-left:5px;">Delete</button>
+            </form>
+        </li><hr>`;
+});
+
+
+    document.getElementById("replyList").innerHTML = html || "<i>No replies yet</i>";
+    document.getElementById("postModal").style.display = "flex";
 }
 
-function closePostDrawer() {
-    document.getElementById('post-drawer').classList.remove('open');
-}
-
-function toggleReplyForm(postId) {
-    const form = document.getElementById(`reply-form-${postId}`);
-    form.classList.toggle("open");
+function closePostModal(){
+    document.getElementById("postModal").style.display = "none";
 }
 </script>
-
 </body>
-</html>
+
+
+
+
+ <button class="btn view-btn"
+                        onclick="openPostModal(JSON.parse(decodeURIComponent('<%= encodeURIComponent(JSON.stringify(post)) %>')))">
+                        <i class="fas fa-eye"></i> View
+                    </button>

@@ -514,5 +514,141 @@
     });
 </script>
 
+<script>
+function toggleForm(formType) {
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
+    const formContainer = document.querySelector('.form-container');
+
+    toggleBtns.forEach(btn => btn.classList.remove('active'));
+    loginForm.classList.remove('active');
+    signupForm.classList.remove('active');
+    formContainer.classList.remove('signup-container', 'login-container');
+
+    if (formType === 'login') {
+        toggleBtns[0].classList.add('active');
+        formContainer.classList.add('login-container');
+        setTimeout(() => loginForm.classList.add('active'), 150);
+    } else {
+        toggleBtns[1].classList.add('active');
+        formContainer.classList.add('signup-container');
+        setTimeout(() => signupForm.classList.add('active'), 150);
+    }
+}
+
+// EMAIL FORMAT VALIDATOR
+function isValidEmail(email) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+}
+
+// PHONE NUMBER VALIDATOR (10 digits only)
+function isValidPhone(phone) {
+    const phonePattern = /^[0-9]{10}$/;
+    return phonePattern.test(phone);
+}
+
+// LOGIN FORM VALIDATION
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+
+    if (!isValidEmail(email)) {
+        e.preventDefault();
+        alert('Please enter a valid email address.');
+        return;
+    }
+
+    if (password.length < 6) {
+        e.preventDefault();
+        alert('Password must be at least 6 characters long.');
+        return;
+    }
+});
+
+// SIGNUP FORM VALIDATION
+document.getElementById('signupForm').addEventListener('submit', function(e) {
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    function isAlphabet(str) {
+    return /^[A-Za-z]+$/.test(str);
+    }
+
+    // Inside signup form submit event
+    if (!isAlphabet(firstName) || !isAlphabet(lastName)) {
+        e.preventDefault();
+        alert('Name fields can only contain alphabets.');
+        return;
+    }
+
+
+    if (firstName === '' || lastName === '') {
+        e.preventDefault();
+        alert('Please fill in both first and last names.');
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        e.preventDefault();
+        alert('Please enter a valid email address.');
+        return;
+    }
+
+    if (phone && !isValidPhone(phone)) {
+        e.preventDefault();
+        alert('Please enter a valid 10-digit phone number.');
+        return;
+    }
+
+    if (password.length < 6) {
+        e.preventDefault();
+        alert('Password must be at least 6 characters long.');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+        return;
+    }
+
+    const agreeTerms = document.getElementById('agreeTerms').checked;
+    if (!agreeTerms) {
+        e.preventDefault();
+        alert('You must agree to the Terms of Service.');
+    }
+});
+
+// Field Focus & Color Feedback
+document.querySelectorAll('input, textarea, select').forEach(input => {
+    input.addEventListener('focus', function() {
+        this.parentElement.classList.add('focused');
+    });
+
+    input.addEventListener('blur', function() {
+        if (!this.value) {
+            this.parentElement.classList.remove('focused');
+        }
+    });
+});
+
+document.querySelectorAll('input[required]').forEach(input => {
+    input.addEventListener('blur', function() {
+        if (!this.value) {
+            this.style.borderColor = 'rgba(255, 100, 100, 0.5)';
+        } else {
+            this.style.borderColor = 'rgba(100, 255, 100, 0.5)';
+        }
+    });
+});
+</script>
+
+
 </body>
 </html>

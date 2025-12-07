@@ -7,6 +7,7 @@ const resourceSchema = new mongoose.Schema({
   description: { type: String, default: "" },
   type: { type: String, enum: ["pdf", "video", "link", "image"], required: true },
   url: { type: String, required: false },
+  bgimage:{ type: String, default: "" },
   tags: [{ type: String }],
   uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   category: { 
@@ -24,6 +25,19 @@ const categorySchema = new mongoose.Schema({
   description: { type: String, default: "" }
 });
 
+const replySchema = new mongoose.Schema({
+  text: { type: String, required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  replies: [
+    {
+      text: String,
+      repliedAt: { type: Date, default: Date.now }
+    }
+  ],
+  createdAt: { type: Date, default: Date.now }
+});
+
+
 /* ========== COMMENT SCHEMA ==========
 const commentSchema = new mongoose.Schema({
   resourceId: { type: mongoose.Schema.Types.ObjectId, ref: "Resource", required: true },
@@ -35,6 +49,7 @@ const commentSchema = new mongoose.Schema({
 // ========== MODELS ==========
 const Resource = mongoose.model("Resource", resourceSchema);
 const Category = mongoose.model("Category", categorySchema);
+const Reply = mongoose.model("Reply", replySchema);
 /*const Comment = mongoose.model("Comment", commentSchema);*/
 
-module.exports = { Resource, Category};
+module.exports = { Resource, Category, Reply /*, Comment*/ };

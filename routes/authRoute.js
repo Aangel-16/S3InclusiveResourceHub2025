@@ -1,35 +1,40 @@
-//This page hanldes common login and logout function for admin and regular user
-
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const {User} = require("../models/userModel");
+const { User } = require("../models/userModel");
+
+// --------------------- LOGIN ---------------------
 
 // Show login form
 router.get("/login", (req, res) => {
   res.render("login_signup"); 
 });
 
-// Handle login form
+// Handle login form submission
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
     // Find user
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).send("No user found with this email");
-    }
+    if (!user) return res.status(400).send("No user found with this email");
 
-    // Check password
+    // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).send("Invalid password");
-    }
+    if (!isMatch) return res.status(400).send("Invalid password");
 
-    // After verifying password
-      req.session.userId = user._id;
-      req.session.role = user.role;
+    // Save user session
+      req.session.user = {
+      _id: user._id.toString(),
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role.toLowerCase()   // normalize
+    };
+
+// also set flat values — many routes depend on it
+req.session.userId = user._id.toString();
+req.session.role = user.role.toLowerCase();
+
 
     // Redirect based on role
     if (user.role === "admin") {
@@ -44,65 +49,59 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// --------------------- SIGNUP ---------------------
 
-// New user SignUp form
-router.get("/signUp", async (req, res) => {
-  try {
-    res.render("login_signup");
-  } catch (err) {
-    res.status(500).send("Failed to load form");
-  }
+// Show signup form
+router.get("/signUp", (req, res) => {
+  res.render("login_signup");
 });
 
-// Handle New user SignUp form submission
+// Handle signup form submission
 router.post("/signUp", async (req, res) => {
   try {
     const { firstName, lastName, email, phone, password, confirmPassword } = req.body;
 
-    // Basic validation
     if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
       return res.status(400).send("All fields are required.");
     }
+
     if (password !== confirmPassword) {
       return res.status(400).send("Passwords do not match.");
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).send("User already exists with this email.");
-    }
+    if (existingUser) return res.status(400).send("User already exists with this email.");
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user 
     const newUser = new User({
       firstName,
       lastName,
       email,
       phone,
       password: hashedPassword,
-      role: "teacher", // default role
+      role: "teacher" // default role
     });
 
     await newUser.save();
-
     console.log("User registered:", newUser);
-    res.redirect("/auth/login"); //  redirect to dashboard
+
+    res.redirect("/auth/login");
+
   } catch (err) {
     console.error("Signup Error:", err);
     res.status(500).send("Error while registering user.");
   }
 });
 
+// --------------------- LOGOUT ---------------------
 
 // Show logout confirmation page
 router.get("/logout-confirm", async (req, res) => {
-  if (!req.session.userId) return res.redirect("/auth/login");
+  if (!req.session.user) return res.redirect("/auth/login");
 
   try {
-    const user = await User.findById(req.session.userId);
+    const user = await User.findById(req.session.user._id);
     res.render("logout", { user });
   } catch (err) {
     console.error(err);
@@ -110,7 +109,7 @@ router.get("/logout-confirm", async (req, res) => {
   }
 });
 
-// Actual logout
+// Perform logout
 router.get("/logout", (req, res) => {
   req.session.destroy(err => {
     if (err) return res.status(500).send("Server error");
@@ -119,6 +118,8 @@ router.get("/logout", (req, res) => {
   });
 });
 
+// --------------------- STATIC PAGES ---------------------
+
 router.get("/about", (req, res) => {
   res.render("aboutus"); 
 });
@@ -126,4 +127,5 @@ router.get("/about", (req, res) => {
 router.get("/contact", (req, res) => {
   res.render("contact"); 
 });
+
 module.exports = router;
